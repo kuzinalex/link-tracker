@@ -32,11 +32,11 @@ public class LinkParserTest {
 
 		URL url = new URL("https://github.com");
 		ParserResponse<LinkParserDTO> response = PARSER.parse(url);
-		assertNull(response);
+		assertNull(response.response());
 
 		url = new URL("https://github.com/rghrthr");
 		response = PARSER.parse(url);
-		assertNull(response);
+		assertNull(response.response());
 	}
 
 
@@ -53,17 +53,17 @@ public class LinkParserTest {
 
 		URL url = new URL("https://stackoverflow.com");
 		ParserResponse<LinkParserDTO> response = PARSER.parse(url);
-		assertNull(response);
+		assertNull(response.response());
 
 		url = new URL("https://stackoverflow.com/search?q=unsupported%20link");
 		response = PARSER.parse(url);
-		assertNull(response);
+		assertNull(response.response());
 	}
 	@Test
 	public void testUnknownHost() throws MalformedURLException {
 
 		URL url = new URL("https://unknown.com/questions/111/some-question-name");
 		ParserResponse<LinkParserDTO> response = PARSER.parse(url);
-		assertNull(response);
+		assertNull(response.response());
 	}
 }

@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
 public class StackOverflowLinkParser extends AbstractLinkParser {
 
 	private static final String HOST = "stackoverflow.com";
-	public static final String PATH = "questions";
+	private static final String PATH = "questions";
 
 	@Override
 	protected ParserResponse<LinkParserDTO> parseLink(URL url) {

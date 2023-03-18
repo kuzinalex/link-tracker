@@ -31,7 +31,7 @@ public abstract non-sealed class AbstractLinkParser implements LinkParser {
 		if (response != null) {
 			return response;
 		}else if (next==null){
-			return null;
+			return new ParserResponse<>(null);
 		}
 		return next.parse(url);
 	}
