@@ -1,6 +1,11 @@
 app:
   test: "Something in the way..."
 
+bot:
+  token:
+
+scrapper:
+  baseUrl: "http://localhost:8081"
 
 springdoc:
   swagger-ui:

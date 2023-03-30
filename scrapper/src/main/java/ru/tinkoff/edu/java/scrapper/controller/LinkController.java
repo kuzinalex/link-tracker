@@ -35,7 +35,7 @@ public class LinkController {
 	@GetMapping(value = "/links", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ListLinksResponse> getLinks(@RequestHeader(name = "Tg-Chat-Id", required = true) Long id) {
 
-		return ResponseEntity.status(HttpStatus.OK).body(new ListLinksResponse(null, null)); //заглушка
+		return ResponseEntity.status(HttpStatus.OK).body(new ListLinksResponse(new LinkResponse[]{}, 0)); //заглушка
 	}
 
 	@Operation(summary = "Добавить отслеживание ссылки")
@@ -46,7 +46,7 @@ public class LinkController {
 	@PostMapping(value = "/links", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<LinkResponse> addLink(@RequestHeader(name = "Tg-Chat-Id", required = true) Long id, @Valid @RequestBody AddLinkRequest request) {
 
-		return ResponseEntity.status(HttpStatus.OK).body(new LinkResponse(null, null)); //заглушка
+		return ResponseEntity.status(HttpStatus.OK).body(new LinkResponse(null, request.link())); //заглушка
 	}
 
 	@Operation(summary = "Убрать отслеживание ссылки")
@@ -58,6 +58,6 @@ public class LinkController {
 	@DeleteMapping(value = "/links", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<LinkResponse> deleteLink(@RequestHeader(name = "Tg-Chat-Id", required = true) Long id, @Valid @RequestBody RemoveLinkRequest request) {
 
-		return ResponseEntity.status(HttpStatus.OK).body(new LinkResponse(null, null)); //заглушка
+		return ResponseEntity.status(HttpStatus.OK).body(new LinkResponse(null, request.link())); //заглушка
 	}
 }
