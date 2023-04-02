@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.TelegramBot;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.tinkoff.edu.java.bot.configuration.ApplicationConfig;
 import ru.tinkoff.edu.java.bot.telegramapi.bot.TrackerBot;
 import ru.tinkoff.edu.java.bot.telegramapi.command.Command;
 import ru.tinkoff.edu.java.bot.telegramapi.command.HelpCommand;

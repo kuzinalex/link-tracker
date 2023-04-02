@@ -1,6 +1,7 @@
 package ru.tinkoff.edu.java.bot.telegramapi.command;
 
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -13,20 +14,18 @@ import ru.tinkoff.edu.java.bot.webclient.dto.response.ListLinksResponse;
 
 public class ListCommand implements Command {
 
-	private final String COMMAND = "/list";
-	private final String DESCRIPTION = "показать список отслеживаемых ссылок";
 	private ScrapperClient client;
 
 	@Override
 	public String command() {
 
-		return COMMAND;
+		return "/list";
 	}
 
 	@Override
 	public String description() {
 
-		return DESCRIPTION;
+		return "показать список отслеживаемых ссылок";
 	}
 
 	@Override
@@ -34,7 +33,7 @@ public class ListCommand implements Command {
 
 		Long chatId = update.message().chat().id();
 		ListLinksResponse response = client.getLinks(chatId).block();
-		if (response.size() != 0) {
+		if (response != null && response.size() != 0) {
 			return generateListMessage(chatId, response);
 		} else {
 			return new SendMessage(chatId, "Список пуст");
@@ -43,12 +42,12 @@ public class ListCommand implements Command {
 
 	private SendMessage generateListMessage(Long chatId, ListLinksResponse response) {
 
-		String message = "Список отслеживаемых ссылок:";
-
+		StringBuilder message = new StringBuilder("<b>Список отслеживаемых ссылок:</b>");
 		for (LinkResponse link : response.links()
 		) {
-			message.concat(link.url().toString()).concat("\n");
+			message.append("\n")
+					.append(link.url());
 		}
-		return new SendMessage(chatId, message);
+		return new SendMessage(chatId, message.toString()).parseMode(ParseMode.HTML);
 	}
 }

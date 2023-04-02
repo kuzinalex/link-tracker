@@ -13,8 +13,6 @@ public interface Bot extends AutoCloseable, UpdatesListener {
 	@Override
 	int process(List<Update> updates);
 
-	void start();
-
 	@Override
 	void close();
 }

@@ -10,27 +10,25 @@ import ru.tinkoff.edu.java.bot.webclient.ScrapperClient;
 @NoArgsConstructor
 public class StartCommand implements Command {
 
-	private final String COMMAND = "/start";
-	private final String DESCRIPTION = "зарегистрировать пользователя";
 	private ScrapperClient client;
 
 	@Override
 	public String command() {
 
-		return COMMAND;
+		return "/start";
 	}
 
 	@Override
 	public String description() {
 
-		return DESCRIPTION;
+		return "зарегистрировать пользователя";
 	}
 
 	@Override
 	public SendMessage handle(Update update) {
 
 		Long chatId = update.message().chat().id();
-		var response=client.registerChat(chatId).block();
+		client.registerChat(chatId).block();
 
 		return new SendMessage(chatId, "Чат зарегистрирован");
 	}

@@ -4,9 +4,6 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.AllArgsConstructor;
 import ru.tinkoff.edu.java.bot.telegramapi.command.Command;
-import ru.tinkoff.edu.java.bot.telegramapi.command.HelpCommand;
-import ru.tinkoff.edu.java.bot.telegramapi.command.ListCommand;
-import ru.tinkoff.edu.java.bot.telegramapi.command.StartCommand;
 import ru.tinkoff.edu.java.bot.telegramapi.command.TrackCommand;
 import ru.tinkoff.edu.java.bot.telegramapi.command.UntrackCommand;
 
@@ -22,7 +19,6 @@ public class TrackerBotMessageProcessor implements MessageProcessor {
 
 		return commands;
 	}
-
 	@Override
 	public SendMessage process(Update update) {
 
@@ -33,6 +29,23 @@ public class TrackerBotMessageProcessor implements MessageProcessor {
 			}
 		}
 
+		if (isTrackState(update)) {
+			return commands().stream().filter(command -> command instanceof TrackCommand).findFirst().orElseThrow().handle(update);
+		}
+		if (isUntrackState(update)) {
+			return commands().stream().filter(command -> command instanceof UntrackCommand).findFirst().orElseThrow().handle(update);
+		}
+
 		return new SendMessage(update.message().chat().id(), "Неизвестная команда");
+	}
+
+	private boolean isTrackState(Update update) {
+
+		return update.message().replyToMessage() != null && update.message().replyToMessage().text().equals(TrackCommand.REPLY);
+	}
+
+	private boolean isUntrackState(Update update) {
+
+		return update.message().replyToMessage() != null && update.message().replyToMessage().text().equals(UntrackCommand.REPLY);
 	}
 }

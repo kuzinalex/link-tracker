@@ -5,7 +5,7 @@ bot:
   token:
 
 scrapper:
-  baseUrl: "http://localhost:8081"
+  baseUrl: "http://localhost:8081"  # базовый URL для scrapper client
 
 springdoc:
   swagger-ui:
