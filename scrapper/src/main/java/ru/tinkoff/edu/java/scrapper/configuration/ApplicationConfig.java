@@ -15,8 +15,9 @@ public record ApplicationConfig(@NotNull String test, @NotNull Scheduler schedul
 
 		if (githubBaseUrl == null || githubBaseUrl.isEmpty()) {
 			return "https://api.github.com";
-		} else
+		} else {
 			return githubBaseUrl;
+		}
 	}
 
 	@Override
@@ -24,7 +25,8 @@ public record ApplicationConfig(@NotNull String test, @NotNull Scheduler schedul
 
 		if (stackoverflowBaseUrl == null || stackoverflowBaseUrl.isEmpty()) {
 			return "https://api.stackexchange.com/2.3";
-		} else
+		} else {
 			return stackoverflowBaseUrl;
+		}
 	}
 }
