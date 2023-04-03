@@ -18,4 +18,9 @@ public interface Command {
 
 		return update.message().text().startsWith(command());
 	}
+
+	default BotCommand toApiCommand() {
+
+		return new BotCommand(command(), description());
+	}
 }
