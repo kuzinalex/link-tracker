@@ -6,8 +6,8 @@ import com.pengrad.telegrambot.request.SendMessage;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import ru.tinkoff.edu.java.bot.webclient.ScrapperClient;
-import ru.tinkoff.edu.java.bot.webclient.dto.response.LinkResponse;
-import ru.tinkoff.edu.java.bot.webclient.dto.response.ListLinksResponse;
+import ru.tinkoff.edu.java.common.dto.response.LinkResponse;
+import ru.tinkoff.edu.java.common.dto.response.ListLinksResponse;
 
 @AllArgsConstructor
 @NoArgsConstructor

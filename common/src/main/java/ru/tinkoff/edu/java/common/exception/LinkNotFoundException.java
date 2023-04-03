@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot.webclient.exception;
+package ru.tinkoff.edu.java.common.exception;
 
 public class LinkNotFoundException extends Exception {
 

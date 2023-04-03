@@ -6,8 +6,10 @@ import com.pengrad.telegrambot.request.SendMessage;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import ru.tinkoff.edu.java.bot.webclient.ScrapperClient;
-import ru.tinkoff.edu.java.bot.webclient.dto.request.RemoveLinkRequest;
-import ru.tinkoff.edu.java.bot.webclient.dto.response.LinkResponse;
+import ru.tinkoff.edu.java.common.dto.request.RemoveLinkRequest;
+import ru.tinkoff.edu.java.common.dto.response.LinkResponse;
+
+import java.net.URI;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,7 +37,7 @@ public class UntrackCommand implements Command {
 
 		Long chatId = update.message().chat().id();
 		if (isReply(update)) {
-			String link = update.message().text();
+			URI link = URI.create(update.message().text());
 			RemoveLinkRequest removeLinkRequest = new RemoveLinkRequest(link);
 			try {
 				LinkResponse response = client.deleteLink(chatId, removeLinkRequest).block();

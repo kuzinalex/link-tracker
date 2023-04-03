@@ -5,25 +5,23 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import reactor.core.publisher.Mono;
 import ru.tinkoff.edu.java.bot.webclient.ScrapperClient;
-import ru.tinkoff.edu.java.bot.webclient.dto.response.LinkResponse;
-import ru.tinkoff.edu.java.bot.webclient.dto.response.ListLinksResponse;
+import ru.tinkoff.edu.java.common.dto.response.LinkResponse;
+import ru.tinkoff.edu.java.common.dto.response.ListLinksResponse;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 public class ListCommandTest {

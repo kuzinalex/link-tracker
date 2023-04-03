@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import ru.tinkoff.edu.java.scrapper.dto.request.AddLinkRequest;
-import ru.tinkoff.edu.java.scrapper.dto.request.RemoveLinkRequest;
-import ru.tinkoff.edu.java.scrapper.dto.response.ApiErrorResponse;
-import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
-import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
+import ru.tinkoff.edu.java.common.dto.request.AddLinkRequest;
+import ru.tinkoff.edu.java.common.dto.request.RemoveLinkRequest;
+import ru.tinkoff.edu.java.common.dto.response.ApiErrorResponse;
+import ru.tinkoff.edu.java.common.dto.response.LinkResponse;
+import ru.tinkoff.edu.java.common.dto.response.ListLinksResponse;
 
 @RestController
 @AllArgsConstructor

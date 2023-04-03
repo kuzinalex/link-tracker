@@ -8,12 +8,12 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import ru.tinkoff.edu.java.scrapper.dto.response.ApiErrorResponse;
-import ru.tinkoff.edu.java.scrapper.exception.ChatNotFoundException;
-import ru.tinkoff.edu.java.scrapper.exception.DuplicateChatException;
-import ru.tinkoff.edu.java.scrapper.exception.DuplicateLinkException;
-import ru.tinkoff.edu.java.scrapper.exception.LinkNotFoundException;
-import ru.tinkoff.edu.java.scrapper.exception.ScrapperErrorConstants;
+import ru.tinkoff.edu.java.common.dto.response.ApiErrorResponse;
+import ru.tinkoff.edu.java.common.exception.ChatNotFoundException;
+import ru.tinkoff.edu.java.common.exception.DuplicateChatException;
+import ru.tinkoff.edu.java.common.exception.DuplicateLinkException;
+import ru.tinkoff.edu.java.common.exception.LinkNotFoundException;
+import ru.tinkoff.edu.java.common.exception.ScrapperErrorConstants;
 
 @RestControllerAdvice
 public class ScrapperExceptionHandler {

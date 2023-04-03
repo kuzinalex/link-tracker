@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.tinkoff.edu.java.scrapper.dto.response.ApiErrorResponse;
+import ru.tinkoff.edu.java.common.dto.response.ApiErrorResponse;
 
 @RestController
 @Tag(name = "default")

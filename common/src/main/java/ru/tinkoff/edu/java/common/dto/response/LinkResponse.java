@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot.webclient.dto.response;
+package ru.tinkoff.edu.java.common.dto.response;
 
 import java.net.URI;
 

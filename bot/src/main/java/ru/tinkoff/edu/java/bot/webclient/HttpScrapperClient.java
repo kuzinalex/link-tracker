@@ -5,15 +5,15 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import ru.tinkoff.edu.java.bot.dto.response.ApiErrorResponse;
-import ru.tinkoff.edu.java.bot.webclient.dto.request.AddLinkRequest;
-import ru.tinkoff.edu.java.bot.webclient.dto.request.RemoveLinkRequest;
-import ru.tinkoff.edu.java.bot.webclient.dto.response.LinkResponse;
-import ru.tinkoff.edu.java.bot.webclient.dto.response.ListLinksResponse;
-import ru.tinkoff.edu.java.bot.webclient.exception.ChatNotFoundException;
-import ru.tinkoff.edu.java.bot.webclient.exception.DuplicateChatException;
-import ru.tinkoff.edu.java.bot.webclient.exception.DuplicateLinkException;
-import ru.tinkoff.edu.java.bot.webclient.exception.LinkNotFoundException;
+import ru.tinkoff.edu.java.common.dto.request.AddLinkRequest;
+import ru.tinkoff.edu.java.common.dto.request.RemoveLinkRequest;
+import ru.tinkoff.edu.java.common.dto.response.ApiErrorResponse;
+import ru.tinkoff.edu.java.common.dto.response.LinkResponse;
+import ru.tinkoff.edu.java.common.dto.response.ListLinksResponse;
+import ru.tinkoff.edu.java.common.exception.ChatNotFoundException;
+import ru.tinkoff.edu.java.common.exception.DuplicateChatException;
+import ru.tinkoff.edu.java.common.exception.DuplicateLinkException;
+import ru.tinkoff.edu.java.common.exception.LinkNotFoundException;
 
 @AllArgsConstructor
 public class HttpScrapperClient implements ScrapperClient {

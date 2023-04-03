@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.exception;
+package ru.tinkoff.edu.java.common.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
