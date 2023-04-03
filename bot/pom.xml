@@ -15,6 +15,7 @@
 
     <properties>
         <spring.test.version>5.1.2.RELEASE</spring.test.version>
+        <java-telegram-bot-api.version>6.5.0</java-telegram-bot-api.version>
     </properties>
 
 
@@ -50,7 +51,7 @@
         <dependency>
             <groupId>com.github.pengrad</groupId>
             <artifactId>java-telegram-bot-api</artifactId>
-            <version>6.5.0</version>
+            <version>${java-telegram-bot-api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
