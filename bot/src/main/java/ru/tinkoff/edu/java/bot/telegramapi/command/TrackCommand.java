@@ -5,7 +5,6 @@ import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import ru.tinkoff.edu.java.bot.dto.response.ApiErrorResponse;
 import ru.tinkoff.edu.java.bot.webclient.ScrapperClient;
 import ru.tinkoff.edu.java.bot.webclient.dto.request.AddLinkRequest;
 import ru.tinkoff.edu.java.bot.webclient.dto.response.LinkResponse;
@@ -38,11 +37,11 @@ public class TrackCommand implements Command {
 		if (isReply(update)) {
 			String link = update.message().text();
 			AddLinkRequest addLinkRequest = new AddLinkRequest(link);
-			Object response = client.addLink(chatId, addLinkRequest).block();
 			try {
-				return new SendMessage(chatId, LINK_ADDED + ((LinkResponse) response).url());
-			} catch (ClassCastException e) {
-				return new SendMessage(chatId, ((ApiErrorResponse) response).description());
+				LinkResponse response = client.addLink(chatId, addLinkRequest).block();
+				return new SendMessage(chatId, LINK_ADDED + response.url());
+			} catch (Exception e) {
+				return new SendMessage(chatId, e.getCause().getMessage());
 			}
 		} else {
 			return new SendMessage(chatId, REPLY).replyMarkup(new ForceReply().inputFieldPlaceholder(PLACE_HOLDER));

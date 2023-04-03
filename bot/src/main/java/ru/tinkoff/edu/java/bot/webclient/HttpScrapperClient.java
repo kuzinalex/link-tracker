@@ -10,6 +10,10 @@ import ru.tinkoff.edu.java.bot.webclient.dto.request.AddLinkRequest;
 import ru.tinkoff.edu.java.bot.webclient.dto.request.RemoveLinkRequest;
 import ru.tinkoff.edu.java.bot.webclient.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.bot.webclient.dto.response.ListLinksResponse;
+import ru.tinkoff.edu.java.bot.webclient.exception.ChatNotFoundException;
+import ru.tinkoff.edu.java.bot.webclient.exception.DuplicateChatException;
+import ru.tinkoff.edu.java.bot.webclient.exception.DuplicateLinkException;
+import ru.tinkoff.edu.java.bot.webclient.exception.LinkNotFoundException;
 
 @AllArgsConstructor
 public class HttpScrapperClient implements ScrapperClient {
@@ -29,7 +33,7 @@ public class HttpScrapperClient implements ScrapperClient {
 	}
 
 	@Override
-	public Mono<Object> registerChat(Long id) {
+	public Mono<ResponseEntity> registerChat(Long id) {
 
 		return client.post()
 				.uri(uriBuilder -> uriBuilder
@@ -37,14 +41,15 @@ public class HttpScrapperClient implements ScrapperClient {
 						.build())
 				.exchangeToMono(clientResponse -> {
 					if (clientResponse.statusCode().is4xxClientError()) {
-						return clientResponse.bodyToMono(ApiErrorResponse.class);
+						return clientResponse.bodyToMono(ApiErrorResponse.class)
+								.flatMap(apiErrorResponse -> Mono.error(new DuplicateChatException(apiErrorResponse.description())));
 					}
 					return clientResponse.bodyToMono(ResponseEntity.class);
 				});
 	}
 
 	@Override
-	public Mono<Object> deleteChat(Long id) {
+	public Mono<ResponseEntity> deleteChat(Long id) {
 
 		return client.delete()
 				.uri(uriBuilder -> uriBuilder
@@ -52,7 +57,8 @@ public class HttpScrapperClient implements ScrapperClient {
 						.build())
 				.exchangeToMono(clientResponse -> {
 					if (clientResponse.statusCode().is4xxClientError()) {
-						return clientResponse.bodyToMono(ApiErrorResponse.class);
+						return clientResponse.bodyToMono(ApiErrorResponse.class)
+								.flatMap(apiErrorResponse -> Mono.error(new ChatNotFoundException(apiErrorResponse.description())));
 					}
 					return clientResponse.bodyToMono(ResponseEntity.class);
 				});
@@ -65,13 +71,13 @@ public class HttpScrapperClient implements ScrapperClient {
 				.uri(uriBuilder -> uriBuilder
 						.path(LINKS)
 						.build())
-				.header(TG_CHAT_ID,String.valueOf(id))
+				.header(TG_CHAT_ID, String.valueOf(id))
 				.retrieve()
 				.bodyToMono(ListLinksResponse.class);
 	}
 
 	@Override
-	public Mono<Object> addLink(Long id, AddLinkRequest request) {
+	public Mono<LinkResponse> addLink(Long id, AddLinkRequest request) {
 
 		return client.post()
 				.uri(uriBuilder -> uriBuilder
@@ -81,14 +87,15 @@ public class HttpScrapperClient implements ScrapperClient {
 				.bodyValue(request)
 				.exchangeToMono(clientResponse -> {
 					if (clientResponse.statusCode().is4xxClientError()) {
-						return clientResponse.bodyToMono(ApiErrorResponse.class);
+						return clientResponse.bodyToMono(ApiErrorResponse.class)
+								.flatMap(apiErrorResponse -> Mono.error(new DuplicateLinkException(apiErrorResponse.description())));
 					}
 					return clientResponse.bodyToMono(LinkResponse.class);
 				});
 	}
 
 	@Override
-	public Mono<Object> deleteLink(Long id, RemoveLinkRequest request) {
+	public Mono<LinkResponse> deleteLink(Long id, RemoveLinkRequest request) {
 
 		return client.method(HttpMethod.DELETE)
 				.uri(uriBuilder -> uriBuilder
@@ -98,7 +105,8 @@ public class HttpScrapperClient implements ScrapperClient {
 				.bodyValue(request)
 				.exchangeToMono(clientResponse -> {
 					if (clientResponse.statusCode().is4xxClientError()) {
-						return clientResponse.bodyToMono(ApiErrorResponse.class);
+						return clientResponse.bodyToMono(ApiErrorResponse.class)
+								.flatMap(apiErrorResponse -> Mono.error(new LinkNotFoundException(apiErrorResponse.description())));
 					}
 					return clientResponse.bodyToMono(LinkResponse.class);
 				});

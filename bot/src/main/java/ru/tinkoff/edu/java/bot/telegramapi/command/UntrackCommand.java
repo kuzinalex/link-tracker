@@ -5,7 +5,6 @@ import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import ru.tinkoff.edu.java.bot.dto.response.ApiErrorResponse;
 import ru.tinkoff.edu.java.bot.webclient.ScrapperClient;
 import ru.tinkoff.edu.java.bot.webclient.dto.request.RemoveLinkRequest;
 import ru.tinkoff.edu.java.bot.webclient.dto.response.LinkResponse;
@@ -38,11 +37,11 @@ public class UntrackCommand implements Command {
 		if (isReply(update)) {
 			String link = update.message().text();
 			RemoveLinkRequest removeLinkRequest = new RemoveLinkRequest(link);
-			Object response = client.deleteLink(chatId, removeLinkRequest).block();
 			try {
-				return new SendMessage(chatId, LINK_DELETED + ((LinkResponse) response).url());
-			} catch (ClassCastException e) {
-				return new SendMessage(chatId, ((ApiErrorResponse) response).description());
+				LinkResponse response = client.deleteLink(chatId, removeLinkRequest).block();
+				return new SendMessage(chatId, LINK_DELETED + response.url());
+			} catch (Exception e) {
+				return new SendMessage(chatId, e.getCause().getMessage());
 			}
 		} else {
 			return new SendMessage(chatId, REPLY).replyMarkup(new ForceReply().inputFieldPlaceholder(PLACE_HOLDER));
