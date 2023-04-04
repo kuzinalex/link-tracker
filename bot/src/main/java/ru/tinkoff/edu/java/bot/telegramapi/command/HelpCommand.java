@@ -3,16 +3,22 @@ package ru.tinkoff.edu.java.bot.telegramapi.command;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@AllArgsConstructor
+@Component
 public class HelpCommand implements Command {
 
-	private final List<Command> commands;
+	private List<Command> commands;
 
-	public HelpCommand() {
+	@PostConstruct
+	private void postConstruct() {
 
-		this.commands = List.of(new StartCommand(), new ListCommand(), new TrackCommand(), new UntrackCommand(), this);
+		this.commands.add(this);
 	}
 
 	@Override
@@ -37,8 +43,7 @@ public class HelpCommand implements Command {
 	private SendMessage generateHelpsMessage(Long chatId) {
 
 		StringBuilder message = new StringBuilder("<b>Список поддерживаемых команд:</b>");
-		for (Command command : this.commands
-		) {
+		for (Command command : this.commands) {
 			message.append(("\n"))
 					.append("<b>")
 					.append(command.command())

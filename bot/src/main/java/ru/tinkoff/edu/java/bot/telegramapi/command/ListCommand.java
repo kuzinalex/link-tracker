@@ -4,14 +4,13 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.bot.webclient.ScrapperClient;
 import ru.tinkoff.edu.java.common.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.common.dto.response.ListLinksResponse;
 
 @AllArgsConstructor
-@NoArgsConstructor
-
+@Component
 public class ListCommand implements Command {
 
 	private ScrapperClient client;
@@ -43,8 +42,7 @@ public class ListCommand implements Command {
 	private SendMessage generateListMessage(Long chatId, ListLinksResponse response) {
 
 		StringBuilder message = new StringBuilder("<b>Список отслеживаемых ссылок:</b>");
-		for (LinkResponse link : response.links()
-		) {
+		for (LinkResponse link : response.links()) {
 			message.append("\n")
 					.append(link.url());
 		}

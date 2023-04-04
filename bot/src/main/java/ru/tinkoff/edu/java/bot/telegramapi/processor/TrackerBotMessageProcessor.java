@@ -2,15 +2,21 @@ package ru.tinkoff.edu.java.bot.telegramapi.processor;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.bot.telegramapi.command.Command;
 import ru.tinkoff.edu.java.bot.telegramapi.command.TrackCommand;
 import ru.tinkoff.edu.java.bot.telegramapi.command.UntrackCommand;
 
 import java.util.List;
 
-@AllArgsConstructor
+
+@Component
 public class TrackerBotMessageProcessor implements MessageProcessor {
+
+	public TrackerBotMessageProcessor(List<? extends Command> commands) {
+
+		this.commands = commands;
+	}
 
 	private List<? extends Command> commands;
 
@@ -19,12 +25,12 @@ public class TrackerBotMessageProcessor implements MessageProcessor {
 
 		return commands;
 	}
+
 	@Override
 	public SendMessage process(Update update) {
 
-		for (Command command : commands()
-		) {
-			if (command.supports(update)){
+		for (Command command : commands()) {
+			if (command.supports(update)) {
 				return command.handle(update);
 			}
 		}
