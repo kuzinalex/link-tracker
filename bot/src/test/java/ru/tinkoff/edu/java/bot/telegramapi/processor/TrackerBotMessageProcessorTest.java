@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
+import ru.tinkoff.edu.java.bot.telegramapi.command.Command;
 import ru.tinkoff.edu.java.bot.telegramapi.command.HelpCommand;
 import ru.tinkoff.edu.java.bot.telegramapi.command.ListCommand;
 import ru.tinkoff.edu.java.bot.telegramapi.command.StartCommand;
@@ -16,15 +17,17 @@ import ru.tinkoff.edu.java.bot.webclient.ScrapperClient;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.mock;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TrackerBotMessageProcessorTest {
 
 	private final ScrapperClient client = mock(HttpScrapperClient.class);
+
+	private final List<Command> commands = List.of(new ListCommand(client), new StartCommand(client), new TrackCommand(client), new UntrackCommand(client));
 	private final MessageProcessor processor = new TrackerBotMessageProcessor(
-			List.of(new ListCommand(client), new HelpCommand(), new StartCommand(client), new TrackCommand(client), new UntrackCommand(client)));
+			List.of(new ListCommand(client), new StartCommand(client), new TrackCommand(client), new UntrackCommand(client), new HelpCommand(commands)));
 
 	@Test
 	void processUnknownCommand() {
