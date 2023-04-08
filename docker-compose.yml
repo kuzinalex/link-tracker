@@ -4,7 +4,7 @@ services:
     image: postgres:15
     container_name: scrapper-postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       - POSTGRES_DB=scrapper
       - POSTGRES_USER=postgres
