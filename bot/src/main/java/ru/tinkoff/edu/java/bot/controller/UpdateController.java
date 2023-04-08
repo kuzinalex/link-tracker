@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.tinkoff.edu.java.bot.dto.request.LinkUpdate;
-import ru.tinkoff.edu.java.bot.dto.response.ApiErrorResponse;
+import ru.tinkoff.edu.java.common.dto.response.ApiErrorResponse;
 
 @RestController
 @Tag(name = "default")

@@ -1,9 +1,6 @@
 package ru.tinkoff.edu.java.linkparser;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ru.tinkoff.edu.java.linkparser.dto.GitHubLinkParserDTO;
 import ru.tinkoff.edu.java.linkparser.dto.LinkParserDTO;
 import ru.tinkoff.edu.java.linkparser.dto.ParserResponse;
@@ -14,6 +11,8 @@ import ru.tinkoff.edu.java.linkparser.impl.StackOverflowLinkParser;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class LinkParserTest {
 
@@ -39,7 +38,6 @@ public class LinkParserTest {
 		assertNull(response.response());
 	}
 
-
 	@Test
 	public void testStackOverflowSuccess() throws MalformedURLException {
 
@@ -59,6 +57,7 @@ public class LinkParserTest {
 		response = PARSER.parse(url);
 		assertNull(response.response());
 	}
+
 	@Test
 	public void testUnknownHost() throws MalformedURLException {
 
