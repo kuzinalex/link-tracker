@@ -101,6 +101,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <version>${spring-boot.version}</version>
         </dependency>
+        <dependency>
+            <groupId>ru.tinkoff</groupId>
+            <artifactId>link-parser</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
     <build>

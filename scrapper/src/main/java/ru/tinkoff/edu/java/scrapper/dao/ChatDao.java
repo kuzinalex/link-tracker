@@ -9,5 +9,6 @@ public interface ChatDao {
 
     int remove(Long tgChatId);
 
+    List<Long> findByLink(Long linkId);
     List<Chat> findAll();
 }

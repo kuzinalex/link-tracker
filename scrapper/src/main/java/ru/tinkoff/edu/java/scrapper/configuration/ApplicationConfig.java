@@ -27,4 +27,10 @@ public record ApplicationConfig(@NotNull String test, @NotNull Scheduler schedul
 		} else
 			return stackoverflowBaseUrl;
 	}
+
+	@Override
+	public String botUrl() {
+
+		return "http://localhost:8080";
+	}
 }
