@@ -9,3 +9,10 @@ server:
 springdoc:
   swagger-ui:
     path: "/swagger-ui"
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/scrapper
+    username: postgres
+    password: password
+    driverClassName: org.postgresql.Driver

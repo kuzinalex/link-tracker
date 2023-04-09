@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
+import ru.tinkoff.edu.java.scrapper.webclient.BotClient;
+import ru.tinkoff.edu.java.scrapper.webclient.HttpBotClient;
 import ru.tinkoff.edu.java.scrapper.webclient.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.webclient.StackOverflowClient;
 
@@ -12,39 +14,52 @@ import ru.tinkoff.edu.java.scrapper.webclient.StackOverflowClient;
 @AllArgsConstructor
 public class ClientConfiguration {
 
-	private static final String GITHUB_CLIENT = "gitHubClient";
-	private static final String STACKOVERFLOW_CLIENT = "stackOverflowClient";
+    private static final String GITHUB_CLIENT = "gitHubClient";
+    private static final String STACKOVERFLOW_CLIENT = "stackOverflowClient";
 
-	private ApplicationConfig applicationConfig;
+    private ApplicationConfig applicationConfig;
 
-	@Bean(STACKOVERFLOW_CLIENT)
-	public StackOverflowClient stackOverflowClient() {
+    @Bean(STACKOVERFLOW_CLIENT)
+    public StackOverflowClient stackOverflowClient() {
 
-		return StackOverflowClient.create(stackoverflowWebClient());
-	}
+        return StackOverflowClient.create(stackoverflowWebClient());
+    }
 
-	@Bean(GITHUB_CLIENT)
-	public GitHubClient gitHubClient() {
+    @Bean(GITHUB_CLIENT)
+    public GitHubClient gitHubClient() {
 
-		return GitHubClient.create(githubWebClient());
-	}
+        return GitHubClient.create(githubWebClient());
+    }
 
-	@Bean
-	public WebClient githubWebClient() {
+    @Bean
+    public WebClient githubWebClient() {
 
-		return WebClient.builder()
-				.baseUrl(applicationConfig.githubBaseUrl())
-				.build();
+        return WebClient.builder()
+                .baseUrl(applicationConfig.githubBaseUrl())
+                .build();
 
-	}
+    }
 
-	@Bean
-	public WebClient stackoverflowWebClient() {
+    @Bean
+    public WebClient stackoverflowWebClient() {
 
-		return WebClient.builder()
-				.baseUrl(applicationConfig.stackoverflowBaseUrl())
-				.build();
+        return WebClient.builder()
+                .baseUrl(applicationConfig.stackoverflowBaseUrl())
+                .build();
 
-	}
+    }
 
+    @Bean
+    public WebClient botWebClient() {
+
+        return WebClient.builder()
+                .baseUrl(applicationConfig.botUrl())
+                .build();
+
+    }
+
+    @Bean
+    public BotClient botClient() {
+        return new HttpBotClient(botWebClient());
+    }
 }

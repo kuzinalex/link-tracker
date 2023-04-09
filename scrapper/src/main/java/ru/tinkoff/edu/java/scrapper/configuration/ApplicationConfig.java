@@ -8,7 +8,7 @@ import ru.tinkoff.edu.java.scrapper.scheduler.Scheduler;
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record ApplicationConfig(@NotNull String test, @NotNull Scheduler scheduler, String githubBaseUrl,
-								String stackoverflowBaseUrl) {
+								String stackoverflowBaseUrl, String botUrl) {
 
 	@Override
 	public String githubBaseUrl() {
