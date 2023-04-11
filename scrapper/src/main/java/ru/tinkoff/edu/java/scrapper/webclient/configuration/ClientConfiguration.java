@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
-import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
+import ru.tinkoff.edu.java.scrapper.configuration.ApplicationProperties;
 import ru.tinkoff.edu.java.scrapper.webclient.BotClient;
 import ru.tinkoff.edu.java.scrapper.webclient.HttpBotClient;
 import ru.tinkoff.edu.java.scrapper.webclient.GitHubClient;
@@ -17,7 +17,7 @@ public class ClientConfiguration {
     private static final String GITHUB_CLIENT = "gitHubClient";
     private static final String STACKOVERFLOW_CLIENT = "stackOverflowClient";
 
-    private ApplicationConfig applicationConfig;
+    private ApplicationProperties applicationProperties;
 
     @Bean(STACKOVERFLOW_CLIENT)
     public StackOverflowClient stackOverflowClient() {
@@ -35,7 +35,7 @@ public class ClientConfiguration {
     public WebClient githubWebClient() {
 
         return WebClient.builder()
-                .baseUrl(applicationConfig.githubBaseUrl())
+                .baseUrl(applicationProperties.githubBaseUrl())
                 .build();
 
     }
@@ -44,7 +44,7 @@ public class ClientConfiguration {
     public WebClient stackoverflowWebClient() {
 
         return WebClient.builder()
-                .baseUrl(applicationConfig.stackoverflowBaseUrl())
+                .baseUrl(applicationProperties.stackoverflowBaseUrl())
                 .build();
 
     }
@@ -53,7 +53,7 @@ public class ClientConfiguration {
     public WebClient botWebClient() {
 
         return WebClient.builder()
-                .baseUrl(applicationConfig.botUrl())
+                .baseUrl(applicationProperties.botUrl())
                 .build();
 
     }

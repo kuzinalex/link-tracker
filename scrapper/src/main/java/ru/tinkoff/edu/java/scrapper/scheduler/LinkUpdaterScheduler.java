@@ -4,8 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.tinkoff.edu.java.scrapper.service.LinkUpdater;
+import ru.tinkoff.edu.java.scrapper.service.UpdateService;
 
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,11 +16,12 @@ import java.util.Date;
 public class LinkUpdaterScheduler {
 
 
-    private final LinkUpdater updater;
+    private final UpdateService updater;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     @Scheduled(fixedDelayString = "#{${app.scheduler.interval}}")
-    public void update() {
+    public void update() throws MalformedURLException {
+        //updater.update();
 
         log.info("Updated at {}", dateFormat.format(new Date()));
     }

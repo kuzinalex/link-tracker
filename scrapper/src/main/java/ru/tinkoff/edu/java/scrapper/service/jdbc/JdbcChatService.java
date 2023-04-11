@@ -1,6 +1,7 @@
 package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
 import org.springframework.stereotype.Service;
+import ru.tinkoff.edu.java.common.exception.DuplicateChatException;
 import ru.tinkoff.edu.java.scrapper.dao.ChatDao;
 import ru.tinkoff.edu.java.scrapper.service.ChatService;
 
@@ -14,7 +15,7 @@ public class JdbcChatService implements ChatService {
     }
 
     @Override
-    public void register(long tgChatId) {
+    public void register(long tgChatId) throws DuplicateChatException {
         this.dao.add(tgChatId);
     }
 

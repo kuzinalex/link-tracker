@@ -1,12 +1,14 @@
 package ru.tinkoff.edu.java.scrapper.dao.jdbc;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.tinkoff.edu.java.common.exception.DuplicateChatException;
 import ru.tinkoff.edu.java.scrapper.dao.ChatDao;
 import ru.tinkoff.edu.java.scrapper.entity.Chat;
 
@@ -27,12 +29,17 @@ public class JdbcChatDao implements ChatDao {
 
 	@Transactional
 	@Override
-	public int add(Long tgChatId) {
+	public int add(Long tgChatId) throws DuplicateChatException {
 
 		String query = "INSERT INTO chat VALUES (?)";
-		return jdbcTemplate.update(query, ps -> {
-			ps.setLong(1, tgChatId);
-		});
+		try {
+			return jdbcTemplate.update(query, ps -> {
+				ps.setLong(1, tgChatId);
+			});
+		}catch (DuplicateKeyException e){
+			throw new DuplicateChatException(e.getMessage());
+		}
+
 	}
 
 	@Transactional

@@ -6,22 +6,21 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import ru.tinkoff.edu.java.common.dto.LinkUpdate;
 import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcChatDao;
 import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcLinkDao;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowResponse;
-import ru.tinkoff.edu.java.scrapper.service.LinkUpdater;
-import ru.tinkoff.edu.java.scrapper.service.LinkUpdaterImpl;
+import ru.tinkoff.edu.java.scrapper.service.UpdateService;
+import ru.tinkoff.edu.java.scrapper.service.UpdateServiceImpl;
 import ru.tinkoff.edu.java.scrapper.webclient.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.webclient.StackOverflowClient;
-import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
+import ru.tinkoff.edu.java.scrapper.configuration.ApplicationProperties;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 @SpringBootApplication
-@EnableConfigurationProperties(ApplicationConfig.class)
+@EnableConfigurationProperties(ApplicationProperties.class)
 @EnableScheduling
 public class ScrapperApplication {
 
@@ -45,7 +44,7 @@ public class ScrapperApplication {
 		JdbcChatDao chatDao= (JdbcChatDao) ctx.getBean("jdbcChatDao");
 //		chatDao.add(2L);
 
-		LinkUpdater linkUpdater= (LinkUpdater) ctx.getBean(LinkUpdaterImpl.class);
-		linkUpdater.update();
+		UpdateService updateService = (UpdateService) ctx.getBean(UpdateServiceImpl.class);
+		updateService.update();
 	}
 }

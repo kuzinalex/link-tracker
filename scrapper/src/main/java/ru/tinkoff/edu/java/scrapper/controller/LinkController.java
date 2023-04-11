@@ -22,11 +22,21 @@ import ru.tinkoff.edu.java.common.dto.request.RemoveLinkRequest;
 import ru.tinkoff.edu.java.common.dto.response.ApiErrorResponse;
 import ru.tinkoff.edu.java.common.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.common.dto.response.ListLinksResponse;
+import ru.tinkoff.edu.java.common.exception.DuplicateLinkException;
+import ru.tinkoff.edu.java.common.exception.LinkNotFoundException;
+import ru.tinkoff.edu.java.scrapper.entity.Link;
+import ru.tinkoff.edu.java.scrapper.service.LinkService;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
 @Tag(name = "default")
 public class LinkController {
+
+	private final LinkService linkService;
 
 	@Operation(summary = "Получить все отслеживаемые ссылки")
 	@ApiResponses({
@@ -35,7 +45,8 @@ public class LinkController {
 	@GetMapping(value = "/links", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ListLinksResponse> getLinks(@RequestHeader(name = "Tg-Chat-Id", required = true) Long id) {
 
-		return ResponseEntity.status(HttpStatus.OK).body(new ListLinksResponse(new LinkResponse[]{}, 0)); //заглушка
+		List<Link> linkList = linkService.listAll(id);
+		return ResponseEntity.status(HttpStatus.OK).body(convertToListLinksResponse(linkList)); //заглушка
 	}
 
 	@Operation(summary = "Добавить отслеживание ссылки")
@@ -44,9 +55,11 @@ public class LinkController {
 			@ApiResponse(responseCode = "400", description = "Некорректные параметры запроса", content = {@Content(schema = @Schema(implementation = ApiErrorResponse.class))})
 	})
 	@PostMapping(value = "/links", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<LinkResponse> addLink(@RequestHeader(name = "Tg-Chat-Id", required = true) Long id, @Valid @RequestBody AddLinkRequest request) {
+	public ResponseEntity<LinkResponse> addLink(@RequestHeader(name = "Tg-Chat-Id", required = true) Long id, @Valid @RequestBody AddLinkRequest request)
+			throws DuplicateLinkException, URISyntaxException {
 
-		return ResponseEntity.status(HttpStatus.OK).body(new LinkResponse(null, request.link())); //заглушка
+		Link link = linkService.add(id, request.link());
+		return ResponseEntity.status(HttpStatus.OK).body(convertToLinkResponse(link)); //заглушка
 	}
 
 	@Operation(summary = "Убрать отслеживание ссылки")
@@ -56,8 +69,27 @@ public class LinkController {
 			@ApiResponse(responseCode = "404", description = "Ссылка не найдена", content = {@Content(schema = @Schema(implementation = ApiErrorResponse.class))}),
 	})
 	@DeleteMapping(value = "/links", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<LinkResponse> deleteLink(@RequestHeader(name = "Tg-Chat-Id", required = true) Long id, @Valid @RequestBody RemoveLinkRequest request) {
+	public ResponseEntity<LinkResponse> deleteLink(@RequestHeader(name = "Tg-Chat-Id", required = true) Long id, @Valid @RequestBody RemoveLinkRequest request)
+			throws LinkNotFoundException, URISyntaxException {
 
-		return ResponseEntity.status(HttpStatus.OK).body(new LinkResponse(null, request.link())); //заглушка
+		Link link = linkService.remove(id, request.link());
+		return ResponseEntity.status(HttpStatus.OK).body(convertToLinkResponse(link)); //заглушка
+	}
+
+	private ListLinksResponse convertToListLinksResponse(List<Link> linkList) {
+
+		LinkResponse[] linkResponses = linkList.stream().map(link -> {
+			try {
+				return convertToLinkResponse(link);
+			} catch (URISyntaxException e) {
+				throw new RuntimeException(e);
+			}
+		}).toArray(LinkResponse[]::new);
+		return new ListLinksResponse(linkResponses, linkResponses.length);
+	}
+
+	private LinkResponse convertToLinkResponse(Link link) throws URISyntaxException {
+
+		return new LinkResponse(link.getId(), new URI(link.getUrl()));
 	}
 }

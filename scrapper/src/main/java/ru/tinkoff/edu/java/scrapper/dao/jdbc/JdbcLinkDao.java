@@ -48,7 +48,7 @@ public class JdbcLinkDao implements LinkDao {
 
 	@Transactional
 	@Override
-	public int addSubscription(Long tgChatId, Long linkId) throws SQLException {
+	public int addSubscription(Long tgChatId, Long linkId) {
 
 		String insertQuery = "INSERT INTO subscription  VALUES (?,?)";
 
@@ -62,6 +62,19 @@ public class JdbcLinkDao implements LinkDao {
 
 	}
 
+	@Override
+	public int update(Link link) {
+
+		String insertQuery = "UPDATE link SET updated_at=(?), check_time=NOW() WHERE id=(?)";
+		return jdbcTemplate.update(connection -> {
+			PreparedStatement ps = connection
+					.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+			ps.setTimestamp(1, Timestamp.valueOf(link.getUpdatedAt().toLocalDateTime()));
+			ps.setLong(2, link.getId());
+			return ps;
+		});
+	}
+
 	@Transactional
 	@Override
 	public int remove(Long tgChatId, Long link) {
@@ -73,6 +86,7 @@ public class JdbcLinkDao implements LinkDao {
 		});
 	}
 
+	@Transactional
 	@Override
 	public Link find(URI url) {
 

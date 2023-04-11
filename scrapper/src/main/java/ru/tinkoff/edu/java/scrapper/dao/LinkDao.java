@@ -12,8 +12,8 @@ public interface LinkDao {
 
 	long add(URI url);
 
-	int addSubscription(Long tgChatId, Long linkId) throws SQLException;
-
+	int addSubscription(Long tgChatId, Long linkId);
+	int update(Link link);
 	int remove(Long tgChatId, Long link);
 
 	Link find(URI url);
