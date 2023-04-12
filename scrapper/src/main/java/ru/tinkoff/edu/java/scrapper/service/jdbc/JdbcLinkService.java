@@ -2,7 +2,6 @@ package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import ru.tinkoff.edu.java.common.exception.DuplicateLinkException;
 import ru.tinkoff.edu.java.common.exception.LinkNotFoundException;
@@ -11,7 +10,6 @@ import ru.tinkoff.edu.java.scrapper.entity.Link;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
 import java.net.URI;
-import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -48,8 +46,10 @@ public class JdbcLinkService implements LinkService {
 	public Link remove(long tgChatId, URI url) throws LinkNotFoundException {
 
 		Link link = this.dao.find(url);
-		int deleteCount = this.dao.remove(tgChatId, link.getId());
-		if (deleteCount == 0) {
+		if (link == null) {
+			throw new LinkNotFoundException("Error"); // сообщение не важно тк, будет перехвачено RestControllerAdvice
+		}
+		if (this.dao.remove(tgChatId, link.getId()) == 0) {
 			throw new LinkNotFoundException("Error"); // сообщение не важно тк, будет перехвачено RestControllerAdvice
 		}
 		return link;
