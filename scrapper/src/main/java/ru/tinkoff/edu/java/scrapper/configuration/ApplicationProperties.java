@@ -8,7 +8,7 @@ import ru.tinkoff.edu.java.scrapper.scheduler.Scheduler;
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record ApplicationProperties(@NotNull String test, @NotNull Scheduler scheduler, String githubBaseUrl,
-									String stackoverflowBaseUrl, String botUrl) {
+									String stackoverflowBaseUrl, String botUrl, Long oldLinkInterval) {
 
 	@Override
 	public String githubBaseUrl() {
@@ -33,9 +33,19 @@ public record ApplicationProperties(@NotNull String test, @NotNull Scheduler sch
 
 		if (botUrl == null || botUrl.isEmpty()) {
 			return "http://localhost:8080";
-		}else {
+		} else {
 			return botUrl;
 		}
 
+	}
+
+	@Override
+	public Long oldLinkInterval() {
+
+		if (oldLinkInterval == null) {
+			return 30L;
+		} else {
+			return oldLinkInterval;
+		}
 	}
 }

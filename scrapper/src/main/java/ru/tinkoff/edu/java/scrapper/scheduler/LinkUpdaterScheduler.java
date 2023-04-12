@@ -21,7 +21,7 @@ public class LinkUpdaterScheduler {
 
     @Scheduled(fixedDelayString = "#{${app.scheduler.interval}}")
     public void update() throws MalformedURLException {
-        //updater.update();
+        updater.update();
 
         log.info("Updated at {}", dateFormat.format(new Date()));
     }

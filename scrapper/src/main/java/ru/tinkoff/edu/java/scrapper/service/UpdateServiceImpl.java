@@ -8,6 +8,7 @@ import ru.tinkoff.edu.java.linkparser.dto.GitHubLinkParserDTO;
 import ru.tinkoff.edu.java.linkparser.dto.LinkParserDTO;
 import ru.tinkoff.edu.java.linkparser.dto.ParserResponse;
 import ru.tinkoff.edu.java.linkparser.dto.StackOverflowLinkParserDTO;
+import ru.tinkoff.edu.java.scrapper.configuration.ApplicationProperties;
 import ru.tinkoff.edu.java.scrapper.dao.ChatDao;
 import ru.tinkoff.edu.java.scrapper.dao.LinkDao;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
@@ -32,11 +33,12 @@ public class UpdateServiceImpl implements UpdateService {
 	private final GitHubClient gitHubClient;
 	private final StackOverflowClient stackOverflowClient;
 	private final BotClient botClient;
+	private final ApplicationProperties properties;
 
 	@Override
 	public int update() throws MalformedURLException {
 
-		List<Link> links = linkDao.findOld(OffsetDateTime.now().minusHours(1L));
+		List<Link> links = linkDao.findOld(OffsetDateTime.now().minusMinutes(properties.oldLinkInterval()));
 		ParserResponse<LinkParserDTO> response;
 		for (Link link : links) {
 			response = linkParser.parse(new URL(link.getUrl()));
