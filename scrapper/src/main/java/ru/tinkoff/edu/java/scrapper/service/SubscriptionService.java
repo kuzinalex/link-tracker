@@ -7,7 +7,7 @@ import ru.tinkoff.edu.java.scrapper.entity.Link;
 import java.net.URI;
 import java.util.List;
 
-public interface LinkService {
+public interface SubscriptionService {
     Link add(long tgChatId, URI url) throws DuplicateLinkException;
 
     Link remove(long tgChatId, URI url) throws LinkNotFoundException;

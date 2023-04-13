@@ -24,9 +24,8 @@ public class JdbcLinkDao implements LinkDao {
 	private JdbcTemplate jdbcTemplate;
 
 	private final String SQL_INSERT_LINK = "INSERT INTO link (url) VALUES (?)";
-	private final String SQL_INSERT_SUBSCRIPTION = "INSERT INTO subscription  VALUES (?,?)";
 	private final String SQL_UPDATED_LINK = "UPDATE link SET updated_at=(?), check_time=NOW() WHERE id=(?)";
-	private final String SQL_REMOVE_SUBSCRIPTION = "DELETE FROM subscription WHERE chat_id=(?) AND link_id=(?)";
+	private final String SQL_REMOVE_LINK = "DELETE FROM link WHERE id=(?)";
 	private final String SQL_FIND_LINK = "SELECT * FROM link WHERE url=(?)";
 	private final String SQL_FIND_ALL_LINKS = "SELECT * FROM link JOIN subscription s on link.id = s.link_id WHERE chat_id=(?)";
 	private final String SQL_FIND_OLD_LINKS = "SELECT * FROM link WHERE check_time<=(?)";
@@ -36,7 +35,6 @@ public class JdbcLinkDao implements LinkDao {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	@Transactional
 	@Override
 	public long add(URI url) {
 
@@ -52,23 +50,6 @@ public class JdbcLinkDao implements LinkDao {
 
 		return (long) keyHolder.getKeys().get("id");
 	}
-
-	@Transactional
-	@Override
-	public int addSubscription(Long tgChatId, Long linkId) {
-
-		String insertQuery = SQL_INSERT_SUBSCRIPTION;
-
-		return jdbcTemplate.update(connection -> {
-			PreparedStatement ps = connection
-					.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
-			ps.setLong(1, tgChatId);
-			ps.setLong(2, linkId);
-			return ps;
-		});
-
-	}
-
 	@Override
 	public int update(Link link) {
 
@@ -82,17 +63,14 @@ public class JdbcLinkDao implements LinkDao {
 		});
 	}
 
-	@Transactional
 	@Override
-	public int remove(Long tgChatId, Long link) {
+	public int remove(Long link) {
 
-		return jdbcTemplate.update(SQL_REMOVE_SUBSCRIPTION, ps -> {
-			ps.setLong(1, tgChatId);
-			ps.setLong(2, link);
+		return jdbcTemplate.update(SQL_REMOVE_LINK, ps -> {
+			ps.setLong(1, link);
 		});
 	}
 
-	@Transactional
 	@Override
 	public Link find(URI url) {
 
@@ -101,7 +79,6 @@ public class JdbcLinkDao implements LinkDao {
 		}, linkRowMapper()).stream().findFirst().orElse(null);
 	}
 
-	@Transactional
 	@Override
 	public List<Link> findAll(Long tgChatId) {
 
@@ -110,7 +87,6 @@ public class JdbcLinkDao implements LinkDao {
 		}, linkRowMapper());
 	}
 
-	@Transactional
 	@Override
 	public List<Link> findOld(OffsetDateTime checkTime) {
 

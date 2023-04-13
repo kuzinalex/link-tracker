@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.common.exception.DuplicateChatException;
 import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcChatDao;
 import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcLinkDao;
+import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcSubscriptionDao;
 import ru.tinkoff.edu.java.scrapper.entity.Link;
 
 import java.net.URI;
@@ -23,6 +24,8 @@ public class JdbcDaoTest extends IntegrationEnvironment {
 	private JdbcChatDao chatDao;
 	@Autowired
 	private JdbcLinkDao linkDao;
+	@Autowired
+	private JdbcSubscriptionDao subscriptionDao;
 
 	@Test
 	@Transactional
@@ -53,8 +56,8 @@ public class JdbcDaoTest extends IntegrationEnvironment {
 		chatDao.add(1L);
 		long linkOneId = linkDao.add(URI.create("https://github.com/kuzinalex/tinkoff-tracker"));
 		long linkTwoId = linkDao.add(URI.create("https://github.com/kuzinalex/not-tinkoff-tracker"));
-		linkDao.addSubscription(1L, linkOneId);
-		linkDao.addSubscription(1L, linkTwoId);
+		subscriptionDao.add(1L, linkOneId);
+		subscriptionDao.add(1L, linkTwoId);
 
 		assertThat(linkDao.findAll(1L)).hasSize(2);
 	}
@@ -66,14 +69,14 @@ public class JdbcDaoTest extends IntegrationEnvironment {
 		chatDao.add(1L);
 		chatDao.add(2L);
 		long linkId = linkDao.add(URI.create("https://github.com/kuzinalex/tinkoff-tracker"));
-		linkDao.addSubscription(1L, linkId);
-		linkDao.addSubscription(2L, linkId);
+		subscriptionDao.add(1L, linkId);
+		subscriptionDao.add(2L, linkId);
 
-		assertThat(chatDao.findByLink(linkId)).hasSize(2);
+		assertThat(chatDao.findLinkSubscribers(linkId)).hasSize(2);
 
-		linkDao.remove(1L, linkId);
+		subscriptionDao.remove(1L, linkId);
 
-		assertThat(chatDao.findByLink(linkId)).hasSize(1);
+		assertThat(chatDao.findLinkSubscribers(linkId)).hasSize(1);
 	}
 
 	@Test
@@ -90,7 +93,7 @@ public class JdbcDaoTest extends IntegrationEnvironment {
 
 	@Test
 	@Transactional
-	public void findOldTEst() {
+	public void findOldLinksTest() {
 
 		linkDao.add(URI.create("https://github.com/kuzinalex/tinkoff-tracker"));
 

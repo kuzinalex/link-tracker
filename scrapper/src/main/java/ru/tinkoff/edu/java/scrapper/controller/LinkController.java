@@ -25,7 +25,7 @@ import ru.tinkoff.edu.java.common.dto.response.ListLinksResponse;
 import ru.tinkoff.edu.java.common.exception.DuplicateLinkException;
 import ru.tinkoff.edu.java.common.exception.LinkNotFoundException;
 import ru.tinkoff.edu.java.scrapper.entity.Link;
-import ru.tinkoff.edu.java.scrapper.service.LinkService;
+import ru.tinkoff.edu.java.scrapper.service.SubscriptionService;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -36,7 +36,7 @@ import java.util.List;
 @Tag(name = "default")
 public class LinkController {
 
-	private final LinkService linkService;
+	private final SubscriptionService subscriptionService;
 
 	@Operation(summary = "Получить все отслеживаемые ссылки")
 	@ApiResponses({
@@ -45,8 +45,8 @@ public class LinkController {
 	@GetMapping(value = "/links", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ListLinksResponse> getLinks(@RequestHeader(name = "Tg-Chat-Id", required = true) Long id) {
 
-		List<Link> linkList = linkService.listAll(id);
-		return ResponseEntity.status(HttpStatus.OK).body(convertToListLinksResponse(linkList)); //заглушка
+		List<Link> linkList = subscriptionService.listAll(id);
+		return ResponseEntity.status(HttpStatus.OK).body(convertToListLinksResponse(linkList));
 	}
 
 	@Operation(summary = "Добавить отслеживание ссылки")
@@ -58,8 +58,8 @@ public class LinkController {
 	public ResponseEntity<LinkResponse> addLink(@RequestHeader(name = "Tg-Chat-Id", required = true) Long id, @Valid @RequestBody AddLinkRequest request)
 			throws DuplicateLinkException, URISyntaxException {
 
-		Link link = linkService.add(id, request.link());
-		return ResponseEntity.status(HttpStatus.OK).body(convertToLinkResponse(link)); //заглушка
+		Link link = subscriptionService.add(id, request.link());
+		return ResponseEntity.status(HttpStatus.OK).body(convertToLinkResponse(link));
 	}
 
 	@Operation(summary = "Убрать отслеживание ссылки")
@@ -72,8 +72,8 @@ public class LinkController {
 	public ResponseEntity<LinkResponse> deleteLink(@RequestHeader(name = "Tg-Chat-Id", required = true) Long id, @Valid @RequestBody RemoveLinkRequest request)
 			throws LinkNotFoundException, URISyntaxException {
 
-		Link link = linkService.remove(id, request.link());
-		return ResponseEntity.status(HttpStatus.OK).body(convertToLinkResponse(link)); //заглушка
+		Link link = subscriptionService.remove(id, request.link());
+		return ResponseEntity.status(HttpStatus.OK).body(convertToLinkResponse(link));
 	}
 
 	private ListLinksResponse convertToListLinksResponse(List<Link> linkList) {

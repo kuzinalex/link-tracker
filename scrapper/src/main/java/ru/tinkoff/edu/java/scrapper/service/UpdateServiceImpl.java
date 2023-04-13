@@ -49,32 +49,31 @@ public class UpdateServiceImpl implements UpdateService {
 
 	private void checkUpdates(ParserResponse<LinkParserDTO> response, Link link) {
 
-		if (response.response() instanceof GitHubLinkParserDTO) {
-			checkGutHub(response, link);
-		} else if (response.response() instanceof StackOverflowLinkParserDTO) {
-			checkStackOverflowResponse(response, link);
+		switch (response.response()) {
+		case GitHubLinkParserDTO dto -> checkGutHub(dto, link);
+		case StackOverflowLinkParserDTO dto -> checkStackOverflowResponse(dto, link);
 		}
 	}
 
-	private void checkStackOverflowResponse(ParserResponse<LinkParserDTO> response, Link link) {
+	private void checkStackOverflowResponse(StackOverflowLinkParserDTO response, Link link) {
 
-		String questionId = ((StackOverflowLinkParserDTO) response.response()).id();
+		String questionId = response.id();
 		StackOverflowResponse stackOverflowResponse = stackOverflowClient.fetchQuestion(questionId).block();
 		if (link.getUpdatedAt().isBefore(stackOverflowResponse.items()[0].last_edit_date())) {
-			List<Long> ids = chatDao.findByLink(link.getId());
+			List<Long> ids = chatDao.findLinkSubscribers(link.getId());
 			link.setUpdatedAt(stackOverflowResponse.items()[0].last_edit_date());
 			linkDao.update(link);
 			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), "", ids.toArray(Long[]::new))).block();
 		}
 	}
 
-	private void checkGutHub(ParserResponse<LinkParserDTO> response, Link link) {
+	private void checkGutHub(GitHubLinkParserDTO response, Link link) {
 
-		String repoName = ((GitHubLinkParserDTO) response.response()).repoName();
-		String username = ((GitHubLinkParserDTO) response.response()).username();
+		String repoName = response.repoName();
+		String username = response.username();
 		GitHubResponse gitHubResponse = gitHubClient.fetchRepository(username, repoName).block();
 		if (link.getUpdatedAt().isBefore(gitHubResponse.updated_at())) {
-			List<Long> ids = chatDao.findByLink(link.getId());
+			List<Long> ids = chatDao.findLinkSubscribers(link.getId());
 			link.setUpdatedAt(gitHubResponse.updated_at());
 			linkDao.update(link);
 			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), "", ids.toArray(Long[]::new))).block();

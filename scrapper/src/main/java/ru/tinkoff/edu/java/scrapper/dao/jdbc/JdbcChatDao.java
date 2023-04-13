@@ -4,7 +4,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.common.exception.DuplicateChatException;
 import ru.tinkoff.edu.java.scrapper.dao.ChatDao;
 import ru.tinkoff.edu.java.scrapper.entity.Chat;
@@ -25,7 +24,6 @@ public class JdbcChatDao implements ChatDao {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	@Transactional
 	@Override
 	public int add(Long tgChatId) throws DuplicateChatException {
 
@@ -39,7 +37,6 @@ public class JdbcChatDao implements ChatDao {
 
 	}
 
-	@Transactional
 	@Override
 	public int remove(Long tgChatId) {
 
@@ -48,16 +45,14 @@ public class JdbcChatDao implements ChatDao {
 		});
 	}
 
-	@Transactional
 	@Override
-	public List<Long> findByLink(Long linkId) {
+	public List<Long> findLinkSubscribers(Long linkId) {
 
 		return jdbcTemplate.query(SQL_FIND_CHATS_BY_LINK, ps -> {
 			ps.setLong(1, linkId);
 		}, (rs, rowNum) -> rs.getLong("chat_id"));
 	}
 
-	@Transactional
 	@Override
 	public List<Chat> findAll() {
 

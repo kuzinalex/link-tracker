@@ -12,7 +12,7 @@ class IntegrationEnvironmentTest extends IntegrationEnvironment {
 
 	@Test
 	@SneakyThrows
-	void connection__getMetaData_returnCorrectSchema() {
+	void connectionGetMetaDataReturnCorrectSchema() {
 
 		Connection connection = getConnection();
 		List<String> tableNames = getTablesNames(connection);

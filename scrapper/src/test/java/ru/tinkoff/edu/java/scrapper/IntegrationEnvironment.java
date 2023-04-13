@@ -17,6 +17,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
 import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcChatDao;
 import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcLinkDao;
+import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcSubscriptionDao;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -60,6 +61,12 @@ public abstract class IntegrationEnvironment {
 		JdbcLinkDao jdbcLinkDao() {
 
 			return new JdbcLinkDao(jdbcTemplate());
+		}
+
+		@Bean
+		JdbcSubscriptionDao jdbcSubscriptionDao() {
+
+			return new JdbcSubscriptionDao(jdbcTemplate());
 		}
 
 		@Bean
