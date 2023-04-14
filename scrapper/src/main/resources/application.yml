@@ -1,8 +1,8 @@
 app:
   test: "Something in the way..."
   scheduler:
-    interval: 10000
-  oldLinkInterval: 30
+    interval: 60000
+  oldLinkInterval: 1
 
 server:
   port: 8081

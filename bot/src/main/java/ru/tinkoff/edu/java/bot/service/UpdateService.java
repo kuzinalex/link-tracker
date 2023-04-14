@@ -15,7 +15,7 @@ public class UpdateService {
 	public void sendNotifications(LinkUpdate update) {
 
 		for (Long tgChatId : update.tgChatIds()) {
-			bot.execute(new SendMessage(tgChatId, "Обновления доступны в : " + update.url()));
+			bot.execute(new SendMessage(tgChatId, "Обновления доступны в : " + update.url() +"\n" + update.description()));
 		}
 	}
 }

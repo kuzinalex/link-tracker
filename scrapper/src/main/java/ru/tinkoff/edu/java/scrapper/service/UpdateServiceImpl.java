@@ -11,6 +11,8 @@ import ru.tinkoff.edu.java.linkparser.dto.StackOverflowLinkParserDTO;
 import ru.tinkoff.edu.java.scrapper.configuration.ApplicationProperties;
 import ru.tinkoff.edu.java.scrapper.dao.ChatDao;
 import ru.tinkoff.edu.java.scrapper.dao.LinkDao;
+import ru.tinkoff.edu.java.scrapper.dto.GitHubEvent;
+import ru.tinkoff.edu.java.scrapper.dto.GitHubEventType;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowResponse;
 import ru.tinkoff.edu.java.scrapper.entity.Link;
@@ -69,14 +71,77 @@ public class UpdateServiceImpl implements UpdateService {
 
 	private void checkGutHub(GitHubLinkParserDTO response, Link link) {
 
-		String repoName = response.repoName();
 		String username = response.username();
-		GitHubResponse gitHubResponse = gitHubClient.fetchRepository(username, repoName).block();
-		if (link.getUpdatedAt().isBefore(gitHubResponse.updated_at())) {
+		String repo = response.repoName();
+
+		GitHubResponse gitHubResponse = gitHubClient.fetchRepository(username, repo).block();
+		OffsetDateTime lastRepoUpdate = (gitHubResponse.pushed_at().isAfter(gitHubResponse.updated_at())) ? gitHubResponse.pushed_at() : gitHubResponse.updated_at();
+
+		if (link.getUpdatedAt().isBefore(lastRepoUpdate)) {
+
 			List<Long> ids = chatDao.findLinkSubscribers(link.getId());
-			link.setUpdatedAt(gitHubResponse.updated_at());
-			linkDao.update(link);
-			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), "", ids.toArray(Long[]::new))).block();
+			String updateDescription = generateUpdateDescription(username, repo, link);
+			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), updateDescription, ids.toArray(Long[]::new))).block();
+
+			link.setUpdatedAt(lastRepoUpdate);
 		}
+		linkDao.update(link);
+	}
+
+	private String generateUpdateDescription(String username, String repoName, Link link) {
+
+		StringBuilder stringBuilder = new StringBuilder();
+		List<GitHubEvent> eventList = gitHubClient.fetchRepositoryEvents(username, repoName).collectList().block().stream()
+				.filter(gitHubEvent -> gitHubEvent.createdAt().isAfter(link.getUpdatedAt()))
+				.toList();
+		stringBuilder.append(checkPushEvents(eventList));
+		stringBuilder.append(checkPullRequestEvents(eventList));
+
+		return stringBuilder.toString();
+	}
+
+	private String checkPushEvents(List<GitHubEvent> eventList) {
+
+		StringBuilder stringBuilder = new StringBuilder();
+		List<GitHubEvent> pushEvents = eventList.stream()
+				.filter(gitHubEvent -> gitHubEvent.type().equals(GitHubEventType.PUSH_EVENT.getValue()))
+				.toList();
+
+		if (!pushEvents.isEmpty()) {
+			stringBuilder.append("Новые коммиты: ");
+			for (GitHubEvent gitHubEvent : pushEvents) {
+				for (GitHubEvent.Payload.Commit commit : gitHubEvent.payload().commits()) {
+					stringBuilder
+							.append("\n")
+							.append(commit.sha())
+							.append(" -- ")
+							.append(commit.message())
+							.append("\n");
+				}
+			}
+		}
+		return stringBuilder.toString();
+	}
+
+	private String checkPullRequestEvents(List<GitHubEvent> eventList) {
+
+		StringBuilder stringBuilder = new StringBuilder();
+		List<GitHubEvent> pullRequestEvents = eventList.stream()
+				.filter(gitHubEvent -> gitHubEvent.type().equals(GitHubEventType.PULL_REQUEST_EVENT.getValue()))
+				.toList();
+
+		if (!pullRequestEvents.isEmpty()) {
+			stringBuilder.append("Новые пулл реквесты: ");
+			for (GitHubEvent gitHubEvent : pullRequestEvents) {
+				stringBuilder
+						.append("\n")
+						.append(gitHubEvent.payload().pullRequest().title())
+						.append(" -- ")
+						.append(gitHubEvent.payload().pullRequest().url())
+						.append("\n");
+
+			}
+		}
+		return stringBuilder.toString();
 	}
 }
