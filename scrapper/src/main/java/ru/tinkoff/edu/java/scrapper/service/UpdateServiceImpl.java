@@ -38,26 +38,20 @@ public class UpdateServiceImpl implements UpdateService {
 	private final ApplicationProperties properties;
 
 	@Override
-	public int update() throws MalformedURLException {
-
-		List<Link> links = linkDao.findOld(OffsetDateTime.now().minusMinutes(properties.oldLinkInterval()));
-		ParserResponse<LinkParserDTO> response;
-		for (Link link : links) {
-			response = linkParser.parse(new URL(link.getUrl()));
-			checkUpdates(response, link);
-		}
-		return 0;
+	public List<Link> findOld(OffsetDateTime checkTime) {
+		return linkDao.findOld(OffsetDateTime.now().minusMinutes(properties.oldLinkInterval()));
 	}
 
-	private void checkUpdates(ParserResponse<LinkParserDTO> response, Link link) {
+	@Override
+	public void checkUpdates(ParserResponse<LinkParserDTO> response, Link link) {
 
 		switch (response.response()) {
-		case GitHubLinkParserDTO dto -> checkGutHub(dto, link);
-		case StackOverflowLinkParserDTO dto -> checkStackOverflowResponse(dto, link);
+		case GitHubLinkParserDTO dto -> checkGitHub(dto, link);
+		case StackOverflowLinkParserDTO dto -> checkStackOverflow(dto, link);
 		}
 	}
 
-	private void checkStackOverflowResponse(StackOverflowLinkParserDTO response, Link link) {
+	private void checkStackOverflow(StackOverflowLinkParserDTO response, Link link) {
 
 		String questionId = response.id();
 		StackOverflowResponse stackOverflowResponse = stackOverflowClient.fetchQuestion(questionId).block();
@@ -69,7 +63,7 @@ public class UpdateServiceImpl implements UpdateService {
 		}
 	}
 
-	private void checkGutHub(GitHubLinkParserDTO response, Link link) {
+	private void checkGitHub(GitHubLinkParserDTO response, Link link) {
 
 		String username = response.username();
 		String repo = response.repoName();
