@@ -8,7 +8,6 @@ public interface SubscriptionDao {
 
 	int add(Long tgChatId, Long linkId);
 	int remove(Long tgChatId, Long linkId);
-	List<Subscription> findAll(Long tgChatId);
 	Subscription find(Long tgChatId, Long linkId);
 
 }

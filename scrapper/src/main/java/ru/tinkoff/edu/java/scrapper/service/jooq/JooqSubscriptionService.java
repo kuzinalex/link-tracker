@@ -1,25 +1,24 @@
-package ru.tinkoff.edu.java.scrapper.service.jdbc;
+package ru.tinkoff.edu.java.scrapper.service.jooq;
 
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.common.exception.DuplicateLinkException;
 import ru.tinkoff.edu.java.common.exception.LinkNotFoundException;
-import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcLinkDao;
-import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcSubscriptionDao;
+import ru.tinkoff.edu.java.scrapper.dao.jooq.JooqLinkDao;
+import ru.tinkoff.edu.java.scrapper.dao.jooq.JooqSubscriptionDao;
 import ru.tinkoff.edu.java.scrapper.entity.Link;
 import ru.tinkoff.edu.java.scrapper.service.SubscriptionService;
 
 import java.net.URI;
 import java.util.List;
 
-@Service
+//@Service
 @AllArgsConstructor
-public class JdbcSubscriptionService implements SubscriptionService {
+public class JooqSubscriptionService implements SubscriptionService {
 
-	private final JdbcLinkDao linkDao;
-	private final JdbcSubscriptionDao subscriptionDao;
+	private final JooqLinkDao linkDao;
+	private final JooqSubscriptionDao subscriptionDao;
 
 	@Override
 	@Transactional
@@ -56,7 +55,6 @@ public class JdbcSubscriptionService implements SubscriptionService {
 	}
 
 	@Override
-	@Transactional
 	public List<Link> listAll(long tgChatId) {
 
 		return this.linkDao.findAll(tgChatId);

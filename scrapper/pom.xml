@@ -106,6 +106,10 @@
             <artifactId>link-parser</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

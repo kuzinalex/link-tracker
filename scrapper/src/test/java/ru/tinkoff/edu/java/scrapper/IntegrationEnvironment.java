@@ -8,6 +8,9 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.DirectoryResourceAccessor;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +21,9 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcChatDao;
 import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcLinkDao;
 import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcSubscriptionDao;
+import ru.tinkoff.edu.java.scrapper.dao.jooq.JooqChatDao;
+import ru.tinkoff.edu.java.scrapper.dao.jooq.JooqLinkDao;
+import ru.tinkoff.edu.java.scrapper.dao.jooq.JooqSubscriptionDao;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -67,6 +73,26 @@ public abstract class IntegrationEnvironment {
 		JdbcSubscriptionDao jdbcSubscriptionDao() {
 
 			return new JdbcSubscriptionDao(jdbcTemplate());
+		}
+
+		@Bean
+		public DSLContext dslContext() {
+			return DSL.using(dataSource(), SQLDialect.POSTGRES);
+		}
+
+		@Bean
+		public JooqChatDao jooqChatDao() {
+			return new JooqChatDao(dslContext());
+		}
+
+		@Bean
+		public JooqLinkDao jooqLinkDAO() {
+			return new JooqLinkDao(dslContext());
+		}
+
+		@Bean
+		public JooqSubscriptionDao jooqSubscriptionDAO() {
+			return new JooqSubscriptionDao(dslContext());
 		}
 
 		@Bean
