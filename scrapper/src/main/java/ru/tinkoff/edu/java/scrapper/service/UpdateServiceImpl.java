@@ -3,7 +3,6 @@ package ru.tinkoff.edu.java.scrapper.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.common.dto.LinkUpdate;
-import ru.tinkoff.edu.java.linkparser.LinkParser;
 import ru.tinkoff.edu.java.linkparser.dto.GitHubLinkParserDTO;
 import ru.tinkoff.edu.java.linkparser.dto.LinkParserDTO;
 import ru.tinkoff.edu.java.linkparser.dto.ParserResponse;
@@ -11,8 +10,8 @@ import ru.tinkoff.edu.java.linkparser.dto.StackOverflowLinkParserDTO;
 import ru.tinkoff.edu.java.scrapper.configuration.ApplicationProperties;
 import ru.tinkoff.edu.java.scrapper.dao.ChatDao;
 import ru.tinkoff.edu.java.scrapper.dao.LinkDao;
-import ru.tinkoff.edu.java.scrapper.dto.GitHubEvent;
-import ru.tinkoff.edu.java.scrapper.dto.GitHubEventType;
+import ru.tinkoff.edu.java.scrapper.dto.response.GitHubEvent;
+import ru.tinkoff.edu.java.scrapper.dto.response.GitHubEventType;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowResponse;
 import ru.tinkoff.edu.java.scrapper.entity.Link;
@@ -20,10 +19,9 @@ import ru.tinkoff.edu.java.scrapper.webclient.BotClient;
 import ru.tinkoff.edu.java.scrapper.webclient.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.webclient.StackOverflowClient;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.TimeZone;
 
 @Service
 @AllArgsConstructor
@@ -31,7 +29,6 @@ public class UpdateServiceImpl implements UpdateService {
 
 	private final LinkDao linkDao;
 	private final ChatDao chatDao;
-	private final LinkParser linkParser;
 	private final GitHubClient gitHubClient;
 	private final StackOverflowClient stackOverflowClient;
 	private final BotClient botClient;
@@ -39,6 +36,7 @@ public class UpdateServiceImpl implements UpdateService {
 
 	@Override
 	public List<Link> findOld(OffsetDateTime checkTime) {
+
 		return linkDao.findOld(OffsetDateTime.now().minusMinutes(properties.oldLinkInterval()));
 	}
 
@@ -57,10 +55,11 @@ public class UpdateServiceImpl implements UpdateService {
 		StackOverflowResponse stackOverflowResponse = stackOverflowClient.fetchQuestion(questionId).block();
 		if (link.getUpdatedAt().isBefore(stackOverflowResponse.items()[0].last_edit_date())) {
 			List<Long> ids = chatDao.findLinkSubscribers(link.getId());
-			link.setUpdatedAt(stackOverflowResponse.items()[0].last_edit_date());
-			linkDao.update(link);
 			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), "", ids.toArray(Long[]::new))).block();
+
+			link.setUpdatedAt(stackOverflowResponse.items()[0].last_edit_date());
 		}
+		linkDao.update(link);
 	}
 
 	private void checkGitHub(GitHubLinkParserDTO response, Link link) {
@@ -70,6 +69,7 @@ public class UpdateServiceImpl implements UpdateService {
 
 		GitHubResponse gitHubResponse = gitHubClient.fetchRepository(username, repo).block();
 		OffsetDateTime lastRepoUpdate = (gitHubResponse.pushed_at().isAfter(gitHubResponse.updated_at())) ? gitHubResponse.pushed_at() : gitHubResponse.updated_at();
+		lastRepoUpdate = toLocalOffsetDateTime(lastRepoUpdate);
 
 		if (link.getUpdatedAt().isBefore(lastRepoUpdate)) {
 
@@ -85,9 +85,11 @@ public class UpdateServiceImpl implements UpdateService {
 	private String generateUpdateDescription(String username, String repoName, Link link) {
 
 		StringBuilder stringBuilder = new StringBuilder();
-		List<GitHubEvent> eventList = gitHubClient.fetchRepositoryEvents(username, repoName).collectList().block().stream()
-				.filter(gitHubEvent -> gitHubEvent.createdAt().isAfter(link.getUpdatedAt()))
+		List<GitHubEvent> eventList = gitHubClient.fetchRepositoryEvents(username, repoName).collectList().block()
+				.stream()
+				.filter(gitHubEvent -> toLocalOffsetDateTime(gitHubEvent.createdAt()).isAfter(link.getUpdatedAt()))
 				.toList();
+
 		stringBuilder.append(checkPushEvents(eventList));
 		stringBuilder.append(checkPullRequestEvents(eventList));
 
@@ -137,5 +139,10 @@ public class UpdateServiceImpl implements UpdateService {
 			}
 		}
 		return stringBuilder.toString();
+	}
+
+	private OffsetDateTime toLocalOffsetDateTime(OffsetDateTime offsetDateTime) {
+
+		return offsetDateTime.plusNanos((TimeZone.getDefault().getRawOffset() * 1_000_000L));
 	}
 }
