@@ -9,7 +9,7 @@ import ru.tinkoff.edu.java.linkparser.dto.LinkParserDTO;
 import ru.tinkoff.edu.java.linkparser.dto.ParserResponse;
 import ru.tinkoff.edu.java.scrapper.configuration.ApplicationProperties;
 import ru.tinkoff.edu.java.scrapper.entity.Link;
-import ru.tinkoff.edu.java.scrapper.service.UpdateService;
+import ru.tinkoff.edu.java.scrapper.service.update.UpdateService;
 
 import java.net.MalformedURLException;
 import java.net.URL;

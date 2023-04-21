@@ -3,6 +3,7 @@ app:
   scheduler:
     interval: 60000
   oldLinkInterval: 1
+  databaseAccessType: jdbc
 
 server:
   port: 8081

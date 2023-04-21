@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.dao.jooq.JooqChatDao;
 import ru.tinkoff.edu.java.scrapper.dao.jooq.JooqLinkDao;
@@ -18,8 +17,7 @@ import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@ContextConfiguration(classes = IntegrationEnvironment.IntegrationEnvironmentConfiguration.class)
+@SpringBootTest(classes ={ ScrapperApplication.class, IntegrationEnvironment.IntegrationEnvironmentConfiguration.class})
 public class JooqDaoTest extends IntegrationEnvironment{
 
 	@Autowired

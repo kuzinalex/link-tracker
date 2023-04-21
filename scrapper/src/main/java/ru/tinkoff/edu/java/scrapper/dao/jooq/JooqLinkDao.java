@@ -15,7 +15,6 @@ import java.util.List;
 import static ru.tinkoff.edu.java.scrapper.entity.jooq.Tables.LINK;
 import static ru.tinkoff.edu.java.scrapper.entity.jooq.tables.Subscription.SUBSCRIPTION;
 
-//@Repository
 @AllArgsConstructor
 public class JooqLinkDao implements LinkDao {
 

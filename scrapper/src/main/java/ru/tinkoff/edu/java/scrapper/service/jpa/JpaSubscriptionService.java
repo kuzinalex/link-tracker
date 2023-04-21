@@ -1,12 +1,10 @@
-package ru.tinkoff.edu.java.scrapper.service.jooq;
+package ru.tinkoff.edu.java.scrapper.service.jpa;
 
 import lombok.AllArgsConstructor;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.common.exception.DuplicateLinkException;
 import ru.tinkoff.edu.java.common.exception.LinkNotFoundException;
-import ru.tinkoff.edu.java.scrapper.dao.jooq.JooqLinkDao;
-import ru.tinkoff.edu.java.scrapper.dao.jooq.JooqSubscriptionDao;
+import ru.tinkoff.edu.java.scrapper.dao.jpa.JpaLinkDao;
+import ru.tinkoff.edu.java.scrapper.dao.jpa.JpaSubscriptionDao;
 import ru.tinkoff.edu.java.scrapper.entity.Link;
 import ru.tinkoff.edu.java.scrapper.service.SubscriptionService;
 
@@ -14,13 +12,12 @@ import java.net.URI;
 import java.util.List;
 
 @AllArgsConstructor
-public class JooqSubscriptionService implements SubscriptionService {
+public class JpaSubscriptionService implements SubscriptionService {
 
-	private final JooqLinkDao linkDao;
-	private final JooqSubscriptionDao subscriptionDao;
+	private final JpaLinkDao linkDao;
+	private final JpaSubscriptionDao subscriptionDao;
 
 	@Override
-	@Transactional
 	public Link add(long tgChatId, URI url) throws DuplicateLinkException {
 
 		Long id;
@@ -31,16 +28,13 @@ public class JooqSubscriptionService implements SubscriptionService {
 		} else {
 			id = link.getId();
 		}
-		try {
-			this.subscriptionDao.add(tgChatId, id);
-		} catch (DuplicateKeyException e) {
+		if (this.subscriptionDao.add(tgChatId, id) == 0) {
 			throw new DuplicateLinkException("Ссылка уже отслеживается");
 		}
 		return link;
 	}
 
 	@Override
-	@Transactional
 	public Link remove(long tgChatId, URI url) throws LinkNotFoundException {
 
 		Link link = this.linkDao.find(url);

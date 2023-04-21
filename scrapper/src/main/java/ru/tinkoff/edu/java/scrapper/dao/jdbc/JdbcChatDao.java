@@ -10,7 +10,6 @@ import ru.tinkoff.edu.java.scrapper.entity.Chat;
 
 import java.util.List;
 
-@Repository
 public class JdbcChatDao implements ChatDao {
 
 	private final String SQL_INSERT_CHAT = "INSERT INTO chat VALUES (?)";
