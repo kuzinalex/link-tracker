@@ -53,11 +53,11 @@ public class UpdateServiceImpl implements UpdateService {
 
 		String questionId = response.id();
 		StackOverflowResponse stackOverflowResponse = stackOverflowClient.fetchQuestion(questionId).block();
-		if (link.getUpdatedAt().isBefore(stackOverflowResponse.items()[0].last_edit_date())) {
+		if (link.getUpdatedAt().isBefore(stackOverflowResponse.items()[0].lastEditDate())) {
 			List<Long> ids = chatDao.findLinkSubscribers(link.getId());
 			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), "", ids.toArray(Long[]::new))).block();
 
-			link.setUpdatedAt(stackOverflowResponse.items()[0].last_edit_date());
+			link.setUpdatedAt(stackOverflowResponse.items()[0].lastEditDate());
 		}
 		linkDao.update(link);
 	}
@@ -68,7 +68,7 @@ public class UpdateServiceImpl implements UpdateService {
 		String repo = response.repoName();
 
 		GitHubResponse gitHubResponse = gitHubClient.fetchRepository(username, repo).block();
-		OffsetDateTime lastRepoUpdate = (gitHubResponse.pushed_at().isAfter(gitHubResponse.updated_at())) ? gitHubResponse.pushed_at() : gitHubResponse.updated_at();
+		OffsetDateTime lastRepoUpdate = (gitHubResponse.pushedAt().isAfter(gitHubResponse.updatedAt())) ? gitHubResponse.pushedAt() : gitHubResponse.updatedAt();
 		lastRepoUpdate = toLocalOffsetDateTime(lastRepoUpdate);
 
 		if (link.getUpdatedAt().isBefore(lastRepoUpdate)) {
