@@ -18,5 +18,5 @@ public interface StackOverflowClient {
 		return new HttpStackOverflowClient(builder.baseUrl(url).build());
 	}
 
-	Mono<StackOverflowResponse> fetchQuestion(String id) throws JSONException, JsonProcessingException;
+	Mono<StackOverflowResponse> fetchQuestion(String id) ;
 }

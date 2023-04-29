@@ -6,7 +6,7 @@ import java.time.OffsetDateTime;
 
 public record StackOverflowResponse(Item[] items) {
 
-	private record Item(@JsonProperty(value = "question_id") String questionId, @JsonProperty(value = "last_activity_date") OffsetDateTime lastActivityDate,
+	public record Item(@JsonProperty(value = "question_id") String questionId, @JsonProperty(value = "last_activity_date") OffsetDateTime lastActivityDate,
 						@JsonProperty(value = "creation_date") OffsetDateTime creationDate,
 						@JsonProperty(value = "last_edit_date") OffsetDateTime lastEditDate) {
 

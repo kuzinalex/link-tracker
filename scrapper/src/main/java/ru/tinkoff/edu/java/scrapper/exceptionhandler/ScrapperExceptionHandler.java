@@ -28,34 +28,34 @@ public class ScrapperExceptionHandler {
 	@ExceptionHandler(LinkNotFoundException.class)
 	public ResponseEntity<ApiErrorResponse> linkNotFoundExceptionHandler(LinkNotFoundException e) {
 
-		ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.LINK_NOT_FOUND); // пока не выбрасывается, тк нет данных
+		ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.LINK_NOT_FOUND);
 		return new ResponseEntity<>(apiErrorResponse, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(ChatNotFoundException.class)
 	public ResponseEntity<ApiErrorResponse> chatNotFoundExceptionHandler(ChatNotFoundException e) {
 
-		ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.CHAT_NOT_EXISTS); // пока не выбрасывается, тк нет данных
+		ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.CHAT_NOT_EXISTS);
 		return new ResponseEntity<>(apiErrorResponse, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(DuplicateLinkException.class)
 	public ResponseEntity<ApiErrorResponse> duplicateLinkExceptionHandler(DuplicateLinkException e) {
 
-		ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.DUPLICATE_LINK); // пока не выбрасывается, тк нет данных
+		ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.DUPLICATE_LINK);
 		return new ResponseEntity<>(apiErrorResponse, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(DuplicateChatException.class)
 	public ResponseEntity<ApiErrorResponse> duplicateChatExceptionHandler(DuplicateChatException e) {
 
-		ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.DUPLICATE_CHAT); // пока не выбрасывается, тк нет данных
+		ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.DUPLICATE_CHAT);
 		return new ResponseEntity<>(apiErrorResponse, HttpStatus.NOT_FOUND);
 	}
 
 	private ApiErrorResponse generateApiErrorResponse(Exception e, ScrapperErrorConstants constants) {
 
-		return new ApiErrorResponse( // ApiErrorResponse заглушка
+		return new ApiErrorResponse(
 				constants.getMessage(),
 				constants.getStatus().toString(),
 				e.getClass().getName(),

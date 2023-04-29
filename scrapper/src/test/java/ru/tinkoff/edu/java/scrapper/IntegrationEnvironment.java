@@ -8,8 +8,18 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.DirectoryResourceAccessor;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.JdbcTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
+import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcChatDao;
+import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcLinkDao;
+import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcSubscriptionDao;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
@@ -21,6 +31,52 @@ public abstract class IntegrationEnvironment {
 
 	protected static final PostgreSQLContainer<?> SQL_CONTAINER;
 	private static final String MASTER_PATH = "migrations/master.xml";
+
+	@Configuration
+	static class IntegrationEnvironmentConfiguration {
+
+		@Bean
+		public DataSource dataSource() {
+
+			return DataSourceBuilder.create()
+					.url(SQL_CONTAINER.getJdbcUrl())
+					.username(SQL_CONTAINER.getUsername())
+					.password(SQL_CONTAINER.getPassword())
+					.build();
+		}
+
+		@Bean
+		JdbcTemplate jdbcTemplate() {
+
+			return new JdbcTemplate(dataSource());
+		}
+
+		@Bean
+		JdbcChatDao jdbcChatDao() {
+
+			return new JdbcChatDao(jdbcTemplate());
+		}
+
+		@Bean
+		JdbcLinkDao jdbcLinkDao() {
+
+			return new JdbcLinkDao(jdbcTemplate());
+		}
+
+		@Bean
+		JdbcSubscriptionDao jdbcSubscriptionDao() {
+
+			return new JdbcSubscriptionDao(jdbcTemplate());
+		}
+
+		@Bean
+		PlatformTransactionManager platformTransactionManager() {
+
+			JdbcTransactionManager transactionManager = new JdbcTransactionManager();
+			transactionManager.setDataSource(dataSource());
+			return transactionManager;
+		}
+	}
 
 	static {
 		SQL_CONTAINER = new PostgreSQLContainer<>("postgres:15");
