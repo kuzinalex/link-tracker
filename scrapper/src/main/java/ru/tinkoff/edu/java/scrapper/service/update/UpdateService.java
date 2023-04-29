@@ -51,13 +51,13 @@ public class UpdateService {
 
 		String questionId = response.id();
 		StackOverflowResponse stackOverflowResponse = stackOverflowClient.fetchQuestion(questionId).block();
-		if (link.getUpdatedAt().isBefore(stackOverflowResponse.items()[0].last_edit_date())) {
-			List<Long> ids = chatService.findLinkSubscribers(link.getId());
+		if (link.getUpdatedAt().isBefore(stackOverflowResponse.items()[0].lastEditDate())) {
+			List<Long> ids = chatDao.findLinkSubscribers(link.getId());
 			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), "", ids.toArray(Long[]::new))).block();
 
-			link.setUpdatedAt(stackOverflowResponse.items()[0].last_edit_date());
+			link.setUpdatedAt(stackOverflowResponse.items()[0].lastEditDate());
 		}
-		linkService.update(link);
+		linkDao.update(link);
 	}
 
 	private void checkGitHub(GitHubLinkParserDTO response, Link link) {
@@ -66,12 +66,12 @@ public class UpdateService {
 		String repo = response.repoName();
 
 		GitHubResponse gitHubResponse = gitHubClient.fetchRepository(username, repo).block();
-		OffsetDateTime lastRepoUpdate = (gitHubResponse.pushed_at().isAfter(gitHubResponse.updated_at())) ? gitHubResponse.pushed_at() : gitHubResponse.updated_at();
+		OffsetDateTime lastRepoUpdate = (gitHubResponse.pushedAt().isAfter(gitHubResponse.updatedAt())) ? gitHubResponse.pushedAt() : gitHubResponse.updatedAt();
 		lastRepoUpdate = toLocalOffsetDateTime(lastRepoUpdate);
 
 		if (link.getUpdatedAt().isBefore(lastRepoUpdate)) {
 
-			List<Long> ids = chatService.findLinkSubscribers(link.getId());
+			List<Long> ids = chatDao.findLinkSubscribers(link.getId());
 			String updateDescription = generateUpdateDescription(username, repo, link);
 			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), updateDescription, ids.toArray(Long[]::new))).block();
 
