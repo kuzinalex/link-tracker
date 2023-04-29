@@ -52,12 +52,12 @@ public class UpdateService {
 		String questionId = response.id();
 		StackOverflowResponse stackOverflowResponse = stackOverflowClient.fetchQuestion(questionId).block();
 		if (link.getUpdatedAt().isBefore(stackOverflowResponse.items()[0].lastEditDate())) {
-			List<Long> ids = chatDao.findLinkSubscribers(link.getId());
+			List<Long> ids = chatService.findLinkSubscribers(link.getId());
 			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), "", ids.toArray(Long[]::new))).block();
 
 			link.setUpdatedAt(stackOverflowResponse.items()[0].lastEditDate());
 		}
-		linkDao.update(link);
+		linkService.update(link);
 	}
 
 	private void checkGitHub(GitHubLinkParserDTO response, Link link) {
@@ -71,7 +71,7 @@ public class UpdateService {
 
 		if (link.getUpdatedAt().isBefore(lastRepoUpdate)) {
 
-			List<Long> ids = chatDao.findLinkSubscribers(link.getId());
+			List<Long> ids = chatService.findLinkSubscribers(link.getId());
 			String updateDescription = generateUpdateDescription(username, repo, link);
 			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), updateDescription, ids.toArray(Long[]::new))).block();
 
