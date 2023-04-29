@@ -15,7 +15,6 @@ public class JdbcSubscriptionDao implements SubscriptionDao {
 
 	private final String SQL_INSERT_SUBSCRIPTION = "INSERT INTO subscription  VALUES (?,?)";
 	private final String SQL_REMOVE_SUBSCRIPTION = "DELETE FROM subscription WHERE chat_id=(?) AND link_id=(?)";
-	private final String SQL_FIND_ALL_SUBSCRIPTIONS = "SELECT * FROM subscription WHERE chat_id=(?)";
 	private final String SQL_FIND_SUBSCRIPTION = "SELECT * FROM subscription WHERE chat_id=(?) AND link_id=(?)";
 
 	private final JdbcTemplate jdbcTemplate;
@@ -25,6 +24,7 @@ public class JdbcSubscriptionDao implements SubscriptionDao {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
+	@Override
 	public int add(Long tgChatId, Long linkId) {
 
 		String insertQuery = SQL_INSERT_SUBSCRIPTION;
@@ -37,13 +37,6 @@ public class JdbcSubscriptionDao implements SubscriptionDao {
 		});
 	}
 
-	public List<Subscription> findAll(Long tgChatId) {
-
-		return jdbcTemplate.query(SQL_FIND_ALL_SUBSCRIPTIONS, ps -> {
-			ps.setLong(1, tgChatId);
-		}, subscriptionRowMapper());
-	}
-
 	@Override
 	public Subscription find(Long tgChatId, Long linkId) {
 
@@ -53,6 +46,7 @@ public class JdbcSubscriptionDao implements SubscriptionDao {
 		}, subscriptionRowMapper()).stream().findFirst().orElse(null);
 	}
 
+	@Override
 	public int remove(Long tgChatId, Long linkId) {
 
 		return jdbcTemplate.update(SQL_REMOVE_SUBSCRIPTION, ps -> {
