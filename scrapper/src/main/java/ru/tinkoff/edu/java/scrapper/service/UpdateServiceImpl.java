@@ -59,9 +59,9 @@ public class UpdateServiceImpl implements UpdateService {
 
 		String questionId = response.id();
 		StackOverflowResponse stackOverflowResponse = stackOverflowClient.fetchQuestion(questionId).block();
-		if (link.getUpdatedAt().isBefore(stackOverflowResponse.items()[0].last_edit_date())) {
+		if (link.getUpdatedAt().isBefore(stackOverflowResponse.items()[0].lastEditDate())) {
 			List<Long> ids = chatDao.findLinkSubscribers(link.getId());
-			link.setUpdatedAt(stackOverflowResponse.items()[0].last_edit_date());
+			link.setUpdatedAt(stackOverflowResponse.items()[0].lastEditDate());
 			linkDao.update(link);
 			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), "", ids.toArray(Long[]::new))).block();
 		}
@@ -72,9 +72,9 @@ public class UpdateServiceImpl implements UpdateService {
 		String repoName = response.repoName();
 		String username = response.username();
 		GitHubResponse gitHubResponse = gitHubClient.fetchRepository(username, repoName).block();
-		if (link.getUpdatedAt().isBefore(gitHubResponse.updated_at())) {
+		if (link.getUpdatedAt().isBefore(gitHubResponse.updatedAt())) {
 			List<Long> ids = chatDao.findLinkSubscribers(link.getId());
-			link.setUpdatedAt(gitHubResponse.updated_at());
+			link.setUpdatedAt(gitHubResponse.updatedAt());
 			linkDao.update(link);
 			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), "", ids.toArray(Long[]::new))).block();
 		}
