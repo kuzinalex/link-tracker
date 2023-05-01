@@ -15,7 +15,7 @@ import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowResponse;
 import ru.tinkoff.edu.java.scrapper.entity.Link;
 import ru.tinkoff.edu.java.scrapper.service.ChatService;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
-import ru.tinkoff.edu.java.scrapper.webclient.BotClient;
+import ru.tinkoff.edu.java.scrapper.service.MessageService;
 import ru.tinkoff.edu.java.scrapper.webclient.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.webclient.StackOverflowClient;
 
@@ -31,7 +31,7 @@ public class UpdateService {
 	private final ChatService chatService;
 	private final GitHubClient gitHubClient;
 	private final StackOverflowClient stackOverflowClient;
-	private final BotClient botClient;
+	private final MessageService messageService;
 	private final ApplicationProperties properties;
 
 	public List<Link> findOld(OffsetDateTime checkTime) {
@@ -53,7 +53,7 @@ public class UpdateService {
 		StackOverflowResponse stackOverflowResponse = stackOverflowClient.fetchQuestion(questionId).block();
 		if (link.getUpdatedAt().isBefore(stackOverflowResponse.items()[0].lastEditDate())) {
 			List<Long> ids = chatService.findLinkSubscribers(link.getId());
-			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), "", ids.toArray(Long[]::new))).block();
+			messageService.sendMessage(new LinkUpdate(link.getId(), link.getUrl(), "", ids.toArray(Long[]::new)));
 
 			link.setUpdatedAt(stackOverflowResponse.items()[0].lastEditDate());
 		}
@@ -73,7 +73,7 @@ public class UpdateService {
 
 			List<Long> ids = chatService.findLinkSubscribers(link.getId());
 			String updateDescription = generateUpdateDescription(username, repo, link);
-			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), updateDescription, ids.toArray(Long[]::new))).block();
+			messageService.sendMessage(new LinkUpdate(link.getId(), link.getUrl(), updateDescription, ids.toArray(Long[]::new)));
 
 			link.setUpdatedAt(lastRepoUpdate);
 		}
