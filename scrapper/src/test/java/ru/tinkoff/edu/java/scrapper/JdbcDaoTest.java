@@ -3,6 +3,8 @@ package ru.tinkoff.edu.java.scrapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.common.exception.DuplicateChatException;
 import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcChatDao;
@@ -15,7 +17,7 @@ import java.time.OffsetDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes ={ ScrapperApplication.class, IntegrationEnvironment.IntegrationEnvironmentConfiguration.class})
+@SpringBootTest(classes = {ScrapperApplication.class, IntegrationEnvironment.IntegrationEnvironmentConfiguration.class})
 public class JdbcDaoTest extends IntegrationEnvironment {
 
 	@Autowired
@@ -24,6 +26,12 @@ public class JdbcDaoTest extends IntegrationEnvironment {
 	private JdbcLinkDao linkDao;
 	@Autowired
 	private JdbcSubscriptionDao subscriptionDao;
+
+	@DynamicPropertySource
+	static void jpaProperties(DynamicPropertyRegistry registry) {
+
+		registry.add("app.databaseAccessType", () -> "jdbc");
+	}
 
 	@Test
 	@Transactional

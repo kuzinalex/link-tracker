@@ -3,6 +3,8 @@ package ru.tinkoff.edu.java.scrapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.common.exception.DuplicateChatException;
 import ru.tinkoff.edu.java.scrapper.dao.jpa.JpaChatDao;
@@ -24,6 +26,12 @@ public class JpaDaoTest extends IntegrationEnvironment {
 	private JpaLinkDao linkDao;
 	@Autowired
 	private JpaSubscriptionDao subscriptionDao;
+
+	@DynamicPropertySource
+	static void jpaProperties(DynamicPropertyRegistry registry) {
+
+		registry.add("app.databaseAccessType", () -> "jpa");
+	}
 
 	@Test
 	@Transactional
