@@ -17,3 +17,5 @@ jobs:
           cache: maven
       - name: Build Bot App
         run: mvn package -pl bot -am
+      - name: Build bot image
+        run: docker build -f bot.Dockerfile -t bot .

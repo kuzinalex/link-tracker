@@ -17,3 +17,5 @@ jobs:
           cache: maven
       - name: Build Scrapper App
         run: mvn package -pl scrapper -am
+      - name: Build scrapper image
+        run: docker build -f scrapper.Dockerfile -t scrapper .
