@@ -22,38 +22,38 @@ import ru.tinkoff.edu.java.scrapper.service.jpa.JpaSubscriptionService;
 @AllArgsConstructor
 public class JpaAccessConfiguration {
 
-	private final JpaChatRepository chatRepository;
-	private final JpaLinkRepository linkRepository;
-	private final JpaSubscriptionRepository subscriptionRepository;
+    private final JpaChatRepository chatRepository;
+    private final JpaLinkRepository linkRepository;
+    private final JpaSubscriptionRepository subscriptionRepository;
 
-	@Bean
-	JpaChatDao chatDao(){
-		return new JpaChatDao(chatRepository);
-	}
+    @Bean
+    JpaChatDao chatDao() {
+        return new JpaChatDao(chatRepository);
+    }
 
-	@Bean
-	JpaLinkDao linkDao(){
-		return new JpaLinkDao(linkRepository,subscriptionRepository);
-	}
+    @Bean
+    JpaLinkDao linkDao() {
+        return new JpaLinkDao(linkRepository, subscriptionRepository);
+    }
 
-	@Bean
-	JpaSubscriptionDao subscriptionDao(){
-		return new JpaSubscriptionDao(subscriptionRepository,chatRepository);
-	}
+    @Bean
+    JpaSubscriptionDao subscriptionDao() {
+        return new JpaSubscriptionDao(subscriptionRepository, chatRepository);
+    }
 
-	@Bean
-	public ChatService chatService() {
-		return new JpaChatService(chatDao());
-	}
+    @Bean
+    public ChatService chatService() {
+        return new JpaChatService(chatDao());
+    }
 
-	@Bean
-	public SubscriptionService subscriptionService(){
-		return new JpaSubscriptionService(linkDao(),subscriptionDao());
-	}
+    @Bean
+    public SubscriptionService subscriptionService() {
+        return new JpaSubscriptionService(linkDao(), subscriptionDao());
+    }
 
-	@Bean
-	public LinkService linkService(){
-		return new JpaLinkService(linkDao());
-	}
+    @Bean
+    public LinkService linkService() {
+        return new JpaLinkService(linkDao());
+    }
 
 }

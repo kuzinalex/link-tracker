@@ -20,42 +20,42 @@ import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcSubscriptionService;
 @AllArgsConstructor
 public class JdbcAccessConfiguration {
 
-	private final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-	@Bean
-	JdbcChatDao chatDao() {
+    @Bean
+    JdbcChatDao chatDao() {
 
-		return new JdbcChatDao(jdbcTemplate);
-	}
+        return new JdbcChatDao(jdbcTemplate);
+    }
 
-	@Bean
-	JdbcLinkDao linkDao() {
+    @Bean
+    JdbcLinkDao linkDao() {
 
-		return new JdbcLinkDao(jdbcTemplate);
-	}
+        return new JdbcLinkDao(jdbcTemplate);
+    }
 
-	@Bean
-	JdbcSubscriptionDao subscriptionDao() {
+    @Bean
+    JdbcSubscriptionDao subscriptionDao() {
 
-		return new JdbcSubscriptionDao(jdbcTemplate);
-	}
+        return new JdbcSubscriptionDao(jdbcTemplate);
+    }
 
-	@Bean
-	public ChatService chatService() {
+    @Bean
+    public ChatService chatService() {
 
-		return new JdbcChatService(chatDao());
-	}
+        return new JdbcChatService(chatDao());
+    }
 
-	@Bean
-	public SubscriptionService subscriptionService() {
+    @Bean
+    public SubscriptionService subscriptionService() {
 
-		return new JdbcSubscriptionService(linkDao(), subscriptionDao());
-	}
+        return new JdbcSubscriptionService(linkDao(), subscriptionDao());
+    }
 
-	@Bean
-	public LinkService linkService() {
+    @Bean
+    public LinkService linkService() {
 
-		return new JdbcLinkService(linkDao());
-	}
+        return new JdbcLinkService(linkDao());
+    }
 
 }

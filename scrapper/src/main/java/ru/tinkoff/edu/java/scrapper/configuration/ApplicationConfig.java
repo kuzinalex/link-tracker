@@ -10,9 +10,9 @@ import ru.tinkoff.edu.java.linkparser.impl.StackOverflowLinkParser;
 @Configuration
 public class ApplicationConfig {
 
-	@Bean
-	public LinkParser linkParser( ){
+    @Bean
+    public LinkParser linkParser() {
 
-		return AbstractLinkParser.of(new GitHubLinkParser(), new StackOverflowLinkParser());
-	}
+        return AbstractLinkParser.of(new GitHubLinkParser(), new StackOverflowLinkParser());
+    }
 }

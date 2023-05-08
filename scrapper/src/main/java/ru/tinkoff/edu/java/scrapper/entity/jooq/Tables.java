@@ -3,9 +3,7 @@
  */
 package ru.tinkoff.edu.java.scrapper.entity.jooq;
 
-
 import javax.annotation.processing.Generated;
-
 import ru.tinkoff.edu.java.scrapper.entity.jooq.tables.Chat;
 import ru.tinkoff.edu.java.scrapper.entity.jooq.tables.Databasechangelog;
 import ru.tinkoff.edu.java.scrapper.entity.jooq.tables.Databasechangeloglock;

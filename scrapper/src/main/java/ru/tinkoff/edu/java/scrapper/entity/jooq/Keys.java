@@ -3,15 +3,12 @@
  */
 package ru.tinkoff.edu.java.scrapper.entity.jooq;
 
-
 import javax.annotation.processing.Generated;
-
 import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
-
 import ru.tinkoff.edu.java.scrapper.entity.jooq.tables.Chat;
 import ru.tinkoff.edu.java.scrapper.entity.jooq.tables.Databasechangeloglock;
 import ru.tinkoff.edu.java.scrapper.entity.jooq.tables.Link;

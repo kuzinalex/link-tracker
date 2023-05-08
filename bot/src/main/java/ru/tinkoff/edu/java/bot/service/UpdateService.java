@@ -10,12 +10,12 @@ import ru.tinkoff.edu.java.common.dto.LinkUpdate;
 @AllArgsConstructor
 public class UpdateService {
 
-	private final Bot bot;
+    private final Bot bot;
 
-	public void sendNotifications(LinkUpdate update) {
+    public void sendNotifications(LinkUpdate update) {
 
-		for (Long tgChatId : update.tgChatIds()) {
-			bot.execute(new SendMessage(tgChatId, "Обновления доступны в : " + update.url() +"\n" + update.description()));
-		}
-	}
+        for (Long tgChatId : update.tgChatIds()) {
+            bot.execute(new SendMessage(tgChatId, "Обновления доступны в : " + update.url() + "\n" + update.description()));
+        }
+    }
 }

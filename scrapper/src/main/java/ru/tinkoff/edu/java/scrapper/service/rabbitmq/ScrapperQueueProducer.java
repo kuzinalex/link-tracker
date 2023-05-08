@@ -7,16 +7,17 @@ import ru.tinkoff.edu.java.scrapper.configuration.ApplicationProperties;
 
 @Service
 public class ScrapperQueueProducer {
-	private final RabbitTemplate rabbitTemplate;
-	private final String exchange;
-	private final String queue;
+    private final RabbitTemplate rabbitTemplate;
+    private final String exchange;
+    private final String queue;
 
-	public ScrapperQueueProducer(RabbitTemplate rabbitTemplate, ApplicationProperties applicationConfig) {
-		this.rabbitTemplate = rabbitTemplate;
-		exchange = applicationConfig.exchangeName();
-		queue = applicationConfig.queueName();
-	}
-	public void send(LinkUpdate linkUpdate) {
-		rabbitTemplate.convertAndSend(exchange, queue, linkUpdate);
-	}
+    public ScrapperQueueProducer(RabbitTemplate rabbitTemplate, ApplicationProperties applicationConfig) {
+        this.rabbitTemplate = rabbitTemplate;
+        exchange = applicationConfig.exchangeName();
+        queue = applicationConfig.queueName();
+    }
+
+    public void send(LinkUpdate linkUpdate) {
+        rabbitTemplate.convertAndSend(exchange, queue, linkUpdate);
+    }
 }

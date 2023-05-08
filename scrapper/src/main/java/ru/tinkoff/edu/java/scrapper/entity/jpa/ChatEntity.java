@@ -6,11 +6,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Set;
 
 @Entity
 @Table(name = "chat")
@@ -19,14 +18,14 @@ import java.util.Set;
 @AllArgsConstructor
 public class ChatEntity {
 
-	public ChatEntity(Long id) {
+    public ChatEntity(Long id) {
 
-		this.id = id;
-	}
+        this.id = id;
+    }
 
-	@Id
-	private Long id;
+    @Id
+    private Long id;
 
-	@OneToMany(fetch = FetchType.EAGER,mappedBy = "chatId", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<SubscriptionEntity> subscription;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "chatId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<SubscriptionEntity> subscription;
 }
