@@ -17,5 +17,6 @@ public class ScrapperApplication {
 		var ctx = SpringApplication.run(ScrapperApplication.class, args);
 		System.out.println(ctx);
 
+
 	}
 }
