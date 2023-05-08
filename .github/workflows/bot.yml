@@ -10,8 +10,8 @@ env:
   IMAGE_NAME: bot
   AUTHOR: kuzinalex
 
-permissions:
-  packages: write
+#permissions:
+#  packages: write
 
 jobs:
   build:
