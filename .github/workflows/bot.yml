@@ -1,8 +1,18 @@
-name: Build Bot App
+name: Build bot
 on:
   push:
     paths:
       - 'bot/**'
+      -
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: bot
+  AUTHOR: kuzinalex
+
+permissions:
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,7 +25,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - name: Build Bot App
+      - name: Build bot app
         run: mvn package -pl bot -am
-      - name: Build bot image
-        run: docker build -f bot.Dockerfile -t bot .
+      - name: Build Docker image
+        run: docker build -f bot.Dockerfile -t ${{ env.REGISTRY}}/${{ env.AUTHOR }}/${{ env.IMAGE_NAME }}:latest .
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.TOKEN }}
+      - name: Push Docker image
+        run: docker push ${{ env.REGISTRY}}/${{ env.AUTHOR }}/${{ env.IMAGE_NAME }}:latest
