@@ -3,7 +3,7 @@ on:
   push:
     paths:
       - 'scrapper/**'
-
+      - '.github/workflows/scrapper.yml'
 
 env:
   REGISTRY: ghcr.io

@@ -3,15 +3,15 @@ on:
   push:
     paths:
       - 'bot/**'
-      -
+      - '.github/workflows/bot.yml'
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: bot
   AUTHOR: kuzinalex
 
-#permissions:
-#  packages: write
+permissions:
+  packages: write
 
 jobs:
   build:
