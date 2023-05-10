@@ -1,5 +1,7 @@
 app:
   test: "Something in the way..."
+  queueName: scrapperQueue
+  exchangeName: scrapperExchange
 
 bot:
   token:
@@ -11,3 +13,12 @@ springdoc:
   swagger-ui:
     path: "/swagger-ui"
 
+
+
+spring:
+  rabbitmq:
+    listener:
+      simple:
+        retry:
+          enabled: true
+          max-attempts: 1

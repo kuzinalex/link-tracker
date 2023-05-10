@@ -8,15 +8,17 @@ import ru.tinkoff.edu.java.scrapper.scheduler.Scheduler;
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record ApplicationProperties(@NotNull String test, @NotNull Scheduler scheduler, String githubBaseUrl,
-									String stackoverflowBaseUrl, String botUrl, Long oldLinkInterval, @NotNull AccessType databaseAccessType) {
+									String stackoverflowBaseUrl, String botUrl, Long oldLinkInterval, @NotNull AccessType databaseAccessType,
+									@NotNull String queueName, @NotNull String exchangeName, @NotNull boolean useQueue) {
 
 	@Override
 	public String githubBaseUrl() {
 
 		if (githubBaseUrl == null || githubBaseUrl.isEmpty()) {
 			return "https://api.github.com";
-		} else
+		} else {
 			return githubBaseUrl;
+		}
 	}
 
 	@Override
@@ -24,8 +26,9 @@ public record ApplicationProperties(@NotNull String test, @NotNull Scheduler sch
 
 		if (stackoverflowBaseUrl == null || stackoverflowBaseUrl.isEmpty()) {
 			return "https://api.stackexchange.com/2.3";
-		} else
+		} else {
 			return stackoverflowBaseUrl;
+		}
 	}
 
 	@Override
