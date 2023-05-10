@@ -8,22 +8,10 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.DirectoryResourceAccessor;
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.JdbcTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
-import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcChatDao;
-import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcLinkDao;
-import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcSubscriptionDao;
-import ru.tinkoff.edu.java.scrapper.dao.jooq.JooqChatDao;
-import ru.tinkoff.edu.java.scrapper.dao.jooq.JooqLinkDao;
-import ru.tinkoff.edu.java.scrapper.dao.jooq.JooqSubscriptionDao;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -38,7 +26,7 @@ public abstract class IntegrationEnvironment {
 	protected static final PostgreSQLContainer<?> SQL_CONTAINER;
 	private static final String MASTER_PATH = "migrations/master.xml";
 
-	@Configuration
+	@TestConfiguration
 	static class IntegrationEnvironmentConfiguration {
 
 		@Bean
@@ -49,58 +37,6 @@ public abstract class IntegrationEnvironment {
 					.username(SQL_CONTAINER.getUsername())
 					.password(SQL_CONTAINER.getPassword())
 					.build();
-		}
-
-		@Bean
-		JdbcTemplate jdbcTemplate() {
-
-			return new JdbcTemplate(dataSource());
-		}
-
-		@Bean
-		JdbcChatDao jdbcChatDao() {
-
-			return new JdbcChatDao(jdbcTemplate());
-		}
-
-		@Bean
-		JdbcLinkDao jdbcLinkDao() {
-
-			return new JdbcLinkDao(jdbcTemplate());
-		}
-
-		@Bean
-		JdbcSubscriptionDao jdbcSubscriptionDao() {
-
-			return new JdbcSubscriptionDao(jdbcTemplate());
-		}
-
-		@Bean
-		public DSLContext dslContext() {
-			return DSL.using(dataSource(), SQLDialect.POSTGRES);
-		}
-
-		@Bean
-		public JooqChatDao jooqChatDao() {
-			return new JooqChatDao(dslContext());
-		}
-
-		@Bean
-		public JooqLinkDao jooqLinkDAO() {
-			return new JooqLinkDao(dslContext());
-		}
-
-		@Bean
-		public JooqSubscriptionDao jooqSubscriptionDAO() {
-			return new JooqSubscriptionDao(dslContext());
-		}
-
-		@Bean
-		PlatformTransactionManager platformTransactionManager() {
-
-			JdbcTransactionManager transactionManager = new JdbcTransactionManager();
-			transactionManager.setDataSource(dataSource());
-			return transactionManager;
 		}
 	}
 

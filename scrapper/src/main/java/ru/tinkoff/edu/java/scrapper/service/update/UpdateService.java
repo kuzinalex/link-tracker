@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.service;
+package ru.tinkoff.edu.java.scrapper.service.update;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,13 +8,13 @@ import ru.tinkoff.edu.java.linkparser.dto.LinkParserDTO;
 import ru.tinkoff.edu.java.linkparser.dto.ParserResponse;
 import ru.tinkoff.edu.java.linkparser.dto.StackOverflowLinkParserDTO;
 import ru.tinkoff.edu.java.scrapper.configuration.ApplicationProperties;
-import ru.tinkoff.edu.java.scrapper.dao.ChatDao;
-import ru.tinkoff.edu.java.scrapper.dao.LinkDao;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubEvent;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubEventType;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowResponse;
 import ru.tinkoff.edu.java.scrapper.entity.Link;
+import ru.tinkoff.edu.java.scrapper.service.ChatService;
+import ru.tinkoff.edu.java.scrapper.service.LinkService;
 import ru.tinkoff.edu.java.scrapper.webclient.BotClient;
 import ru.tinkoff.edu.java.scrapper.webclient.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.webclient.StackOverflowClient;
@@ -25,22 +25,20 @@ import java.util.TimeZone;
 
 @Service
 @AllArgsConstructor
-public class UpdateServiceImpl implements UpdateService {
+public class UpdateService {
 
-	private final LinkDao linkDao;
-	private final ChatDao chatDao;
+	private final LinkService linkService;
+	private final ChatService chatService;
 	private final GitHubClient gitHubClient;
 	private final StackOverflowClient stackOverflowClient;
 	private final BotClient botClient;
 	private final ApplicationProperties properties;
 
-	@Override
 	public List<Link> findOld(OffsetDateTime checkTime) {
 
-		return linkDao.findOld(OffsetDateTime.now().minusMinutes(properties.oldLinkInterval()));
+		return linkService.findOld(OffsetDateTime.now().minusMinutes(properties.oldLinkInterval()));
 	}
 
-	@Override
 	public void checkUpdates(ParserResponse<LinkParserDTO> response, Link link) {
 
 		switch (response.response()) {
@@ -54,12 +52,12 @@ public class UpdateServiceImpl implements UpdateService {
 		String questionId = response.id();
 		StackOverflowResponse stackOverflowResponse = stackOverflowClient.fetchQuestion(questionId).block();
 		if (link.getUpdatedAt().isBefore(stackOverflowResponse.items()[0].lastEditDate())) {
-			List<Long> ids = chatDao.findLinkSubscribers(link.getId());
+			List<Long> ids = chatService.findLinkSubscribers(link.getId());
 			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), "", ids.toArray(Long[]::new))).block();
 
 			link.setUpdatedAt(stackOverflowResponse.items()[0].lastEditDate());
 		}
-		linkDao.update(link);
+		linkService.update(link);
 	}
 
 	private void checkGitHub(GitHubLinkParserDTO response, Link link) {
@@ -73,13 +71,13 @@ public class UpdateServiceImpl implements UpdateService {
 
 		if (link.getUpdatedAt().isBefore(lastRepoUpdate)) {
 
-			List<Long> ids = chatDao.findLinkSubscribers(link.getId());
+			List<Long> ids = chatService.findLinkSubscribers(link.getId());
 			String updateDescription = generateUpdateDescription(username, repo, link);
 			botClient.pullLinks(new LinkUpdate(link.getId(), link.getUrl(), updateDescription, ids.toArray(Long[]::new))).block();
 
 			link.setUpdatedAt(lastRepoUpdate);
 		}
-		linkDao.update(link);
+		linkService.update(link);
 	}
 
 	private String generateUpdateDescription(String username, String repoName, Link link) {

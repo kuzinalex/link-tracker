@@ -9,7 +9,6 @@ import ru.tinkoff.edu.java.scrapper.entity.jooq.tables.records.SubscriptionRecor
 
 import static ru.tinkoff.edu.java.scrapper.entity.jooq.Tables.SUBSCRIPTION;
 
-//@Repository
 @AllArgsConstructor
 public class JooqSubscriptionDao implements SubscriptionDao {
 

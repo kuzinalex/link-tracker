@@ -1,12 +1,12 @@
 package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.common.exception.DuplicateChatException;
 import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcChatDao;
 import ru.tinkoff.edu.java.scrapper.service.ChatService;
 
-@Service
+import java.util.List;
+
 @AllArgsConstructor
 public class JdbcChatService implements ChatService {
 
@@ -20,5 +20,11 @@ public class JdbcChatService implements ChatService {
     @Override
     public void unregister(long tgChatId) {
         this.dao.remove(tgChatId);
+    }
+
+    @Override
+    public List<Long> findLinkSubscribers(Long linkId) {
+
+        return dao.findLinkSubscribers(linkId);
     }
 }

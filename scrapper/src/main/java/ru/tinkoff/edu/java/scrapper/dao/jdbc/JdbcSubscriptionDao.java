@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 
-@Repository
 public class JdbcSubscriptionDao implements SubscriptionDao {
 
 	private final String SQL_INSERT_SUBSCRIPTION = "INSERT INTO subscription  VALUES (?,?)";

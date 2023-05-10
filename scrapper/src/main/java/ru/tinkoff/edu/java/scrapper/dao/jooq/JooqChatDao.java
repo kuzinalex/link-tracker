@@ -13,7 +13,6 @@ import java.util.List;
 import static ru.tinkoff.edu.java.scrapper.entity.jooq.Tables.CHAT;
 import static ru.tinkoff.edu.java.scrapper.entity.jooq.Tables.SUBSCRIPTION;
 
-//@Repository
 @AllArgsConstructor
 public class JooqChatDao implements ChatDao {
 

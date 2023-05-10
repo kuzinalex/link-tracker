@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.common.exception.DuplicateChatException;
-import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcChatDao;
-import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcLinkDao;
-import ru.tinkoff.edu.java.scrapper.dao.jdbc.JdbcSubscriptionDao;
+import ru.tinkoff.edu.java.scrapper.dao.jpa.JpaChatDao;
+import ru.tinkoff.edu.java.scrapper.dao.jpa.JpaLinkDao;
+import ru.tinkoff.edu.java.scrapper.dao.jpa.JpaSubscriptionDao;
 import ru.tinkoff.edu.java.scrapper.entity.Link;
 
 import java.net.URI;
@@ -15,15 +15,15 @@ import java.time.OffsetDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes ={ ScrapperApplication.class, IntegrationEnvironment.IntegrationEnvironmentConfiguration.class})
-public class JdbcDaoTest extends IntegrationEnvironment {
+@SpringBootTest(classes = {ScrapperApplication.class, IntegrationEnvironment.IntegrationEnvironmentConfiguration.class})
+public class JpaDaoTest extends IntegrationEnvironment {
 
 	@Autowired
-	private JdbcChatDao chatDao;
+	private JpaChatDao chatDao;
 	@Autowired
-	private JdbcLinkDao linkDao;
+	private JpaLinkDao linkDao;
 	@Autowired
-	private JdbcSubscriptionDao subscriptionDao;
+	private JpaSubscriptionDao subscriptionDao;
 
 	@Test
 	@Transactional
@@ -97,5 +97,4 @@ public class JdbcDaoTest extends IntegrationEnvironment {
 
 		assertThat(linkDao.findOld(OffsetDateTime.now().plusHours(2))).hasSize(1);
 	}
-
 }

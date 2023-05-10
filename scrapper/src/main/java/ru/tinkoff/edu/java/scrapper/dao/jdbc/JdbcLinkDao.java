@@ -18,7 +18,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
-@Repository
 public class JdbcLinkDao implements LinkDao {
 
 	private JdbcTemplate jdbcTemplate;
