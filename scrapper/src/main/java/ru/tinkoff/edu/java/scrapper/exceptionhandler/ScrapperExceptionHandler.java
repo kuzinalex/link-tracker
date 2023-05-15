@@ -18,49 +18,49 @@ import ru.tinkoff.edu.java.common.exception.ScrapperErrorConstants;
 @RestControllerAdvice
 public class ScrapperExceptionHandler {
 
-	@ExceptionHandler({MethodArgumentNotValidException.class, MissingServletRequestParameterException.class, MethodArgumentTypeMismatchException.class})
-	public ResponseEntity<ApiErrorResponse> incorrectRequestParametersException(Exception e) {
+    @ExceptionHandler({MethodArgumentNotValidException.class, MissingServletRequestParameterException.class, MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<ApiErrorResponse> incorrectRequestParametersException(Exception e) {
 
-		ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.INCORRECT_REQUEST_PARAMETERS);
-		return new ResponseEntity<>(apiErrorResponse, HttpStatus.BAD_REQUEST);
-	}
+        ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.INCORRECT_REQUEST_PARAMETERS);
+        return new ResponseEntity<>(apiErrorResponse, HttpStatus.BAD_REQUEST);
+    }
 
-	@ExceptionHandler(LinkNotFoundException.class)
-	public ResponseEntity<ApiErrorResponse> linkNotFoundExceptionHandler(LinkNotFoundException e) {
+    @ExceptionHandler(LinkNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> linkNotFoundExceptionHandler(LinkNotFoundException e) {
 
-		ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.LINK_NOT_FOUND);
-		return new ResponseEntity<>(apiErrorResponse, HttpStatus.NOT_FOUND);
-	}
+        ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.LINK_NOT_FOUND);
+        return new ResponseEntity<>(apiErrorResponse, HttpStatus.NOT_FOUND);
+    }
 
-	@ExceptionHandler(ChatNotFoundException.class)
-	public ResponseEntity<ApiErrorResponse> chatNotFoundExceptionHandler(ChatNotFoundException e) {
+    @ExceptionHandler(ChatNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> chatNotFoundExceptionHandler(ChatNotFoundException e) {
 
-		ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.CHAT_NOT_EXISTS);
-		return new ResponseEntity<>(apiErrorResponse, HttpStatus.NOT_FOUND);
-	}
+        ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.CHAT_NOT_EXISTS);
+        return new ResponseEntity<>(apiErrorResponse, HttpStatus.NOT_FOUND);
+    }
 
-	@ExceptionHandler(DuplicateLinkException.class)
-	public ResponseEntity<ApiErrorResponse> duplicateLinkExceptionHandler(DuplicateLinkException e) {
+    @ExceptionHandler(DuplicateLinkException.class)
+    public ResponseEntity<ApiErrorResponse> duplicateLinkExceptionHandler(DuplicateLinkException e) {
 
-		ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.DUPLICATE_LINK);
-		return new ResponseEntity<>(apiErrorResponse, HttpStatus.NOT_FOUND);
-	}
+        ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.DUPLICATE_LINK);
+        return new ResponseEntity<>(apiErrorResponse, HttpStatus.NOT_FOUND);
+    }
 
-	@ExceptionHandler(DuplicateChatException.class)
-	public ResponseEntity<ApiErrorResponse> duplicateChatExceptionHandler(DuplicateChatException e) {
+    @ExceptionHandler(DuplicateChatException.class)
+    public ResponseEntity<ApiErrorResponse> duplicateChatExceptionHandler(DuplicateChatException e) {
 
-		ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.DUPLICATE_CHAT);
-		return new ResponseEntity<>(apiErrorResponse, HttpStatus.NOT_FOUND);
-	}
+        ApiErrorResponse apiErrorResponse = generateApiErrorResponse(e, ScrapperErrorConstants.DUPLICATE_CHAT);
+        return new ResponseEntity<>(apiErrorResponse, HttpStatus.NOT_FOUND);
+    }
 
-	private ApiErrorResponse generateApiErrorResponse(Exception e, ScrapperErrorConstants constants) {
+    private ApiErrorResponse generateApiErrorResponse(Exception e, ScrapperErrorConstants constants) {
 
-		return new ApiErrorResponse(
-				constants.getMessage(),
-				constants.getStatus().toString(),
-				e.getClass().getName(),
-				e.getMessage(),
-				ThrowableToStringArray.convert(e)
-		);
-	}
+        return new ApiErrorResponse(
+            constants.getMessage(),
+            constants.getStatus().toString(),
+            e.getClass().getName(),
+            e.getMessage(),
+            ThrowableToStringArray.convert(e)
+        );
+    }
 }

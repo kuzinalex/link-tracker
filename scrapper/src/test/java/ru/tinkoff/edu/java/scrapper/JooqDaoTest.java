@@ -1,106 +1,114 @@
 package ru.tinkoff.edu.java.scrapper;
 
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.util.Random;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.dao.jooq.JooqChatDao;
 import ru.tinkoff.edu.java.scrapper.dao.jooq.JooqLinkDao;
 import ru.tinkoff.edu.java.scrapper.dao.jooq.JooqSubscriptionDao;
 import ru.tinkoff.edu.java.scrapper.entity.Link;
-
-import java.net.URI;
-import java.time.OffsetDateTime;
-import java.util.Random;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes ={ ScrapperApplication.class, IntegrationEnvironment.IntegrationEnvironmentConfiguration.class})
-public class JooqDaoTest extends IntegrationEnvironment{
+@SpringBootTest(classes = {ScrapperApplication.class, IntegrationEnvironment.IntegrationEnvironmentConfiguration.class})
+public class JooqDaoTest extends IntegrationEnvironment {
 
-	@Autowired
-	private JooqChatDao chatDao;
-	@Autowired
-	private JooqLinkDao linkDao;
-	@Autowired
-	private JooqSubscriptionDao subscriptionDao;
+    public static final String TEST_URI_ONE = "https://github.com/kuzinalex/tinkoff";
+    public static final String TEST_URI_TWO = "https://github.com/kuzinalex/parser";
+    @Autowired
+    private JooqChatDao chatDao;
+    @Autowired
+    private JooqLinkDao linkDao;
+    @Autowired
+    private JooqSubscriptionDao subscriptionDao;
 
-	@Test
-	@Transactional
-	@Rollback
-	@SneakyThrows
-	public void addAndFindLinkTest() {
+    @DynamicPropertySource
+    static void jpaProperties(DynamicPropertyRegistry registry) {
 
-		long addedLinkId = linkDao.add(new URI("https://github.com/kuzinalex/tinkoff"));
+        registry.add("app.databaseAccessType", () -> "jooq");
+    }
 
-		Link findedLink = linkDao.find(new URI("https://github.com/kuzinalex/tinkoff"));
+    @Test
+    @Transactional
+    @Rollback
+    @SneakyThrows
+    public void addAndFindLinkTest() {
 
-		assertThat(addedLinkId).isEqualTo(findedLink.getId());
-	}
+        long addedLinkId = linkDao.add(new URI(TEST_URI_ONE));
 
-	@Test
-	@Transactional
-	@Rollback
-	@SneakyThrows
-	public void findAllLinksByChatTest() {
+        Link findedLink = linkDao.find(new URI(TEST_URI_ONE));
 
-		long randomLong = new Random().nextLong();
+        assertThat(addedLinkId).isEqualTo(findedLink.getId());
+    }
 
-		chatDao.add(randomLong);
-		long linkOneId = linkDao.add(new URI("https://github.com/kuzinalex/tracker"));
-		long linkTwoId = linkDao.add(new URI("https://github.com/kuzinalex/scrapper"));
-		subscriptionDao.add(randomLong, linkOneId);
-		subscriptionDao.add(randomLong, linkTwoId);
+    @Test
+    @Transactional
+    @Rollback
+    @SneakyThrows
+    public void findAllLinksByChatTest() {
 
-		assertThat(linkDao.findAll(randomLong)).hasSize(2);
-	}
+        long randomLong = new Random().nextLong();
 
-	@Test
-	@Transactional
-	@Rollback
-	@SneakyThrows
-	public void subscriptionTest() {
+        chatDao.add(randomLong);
+        long linkOneId = linkDao.add(new URI("https://github.com/kuzinalex/tracker"));
+        long linkTwoId = linkDao.add(new URI("https://github.com/kuzinalex/scrapper"));
+        subscriptionDao.add(randomLong, linkOneId);
+        subscriptionDao.add(randomLong, linkTwoId);
 
-		long randomLong = new Random().nextLong();
-		long randomLong1 = new Random().nextLong();
+        assertThat(linkDao.findAll(randomLong)).hasSize(2);
+    }
 
-		chatDao.add(randomLong);
-		chatDao.add(randomLong1);
-		long linkId = linkDao.add(new URI("https://github.com/kuzinalex/bot"));
-		subscriptionDao.add(randomLong, linkId);
-		subscriptionDao.add(randomLong1, linkId);
+    @Test
+    @Transactional
+    @Rollback
+    @SneakyThrows
+    public void subscriptionTest() {
 
-		assertThat(chatDao.findLinkSubscribers(linkId)).hasSize(2);
+        long randomLong = new Random().nextLong();
+        long randomLong1 = new Random().nextLong();
 
-		subscriptionDao.remove(randomLong, linkId);
+        chatDao.add(randomLong);
+        chatDao.add(randomLong1);
+        long linkId = linkDao.add(new URI("https://github.com/kuzinalex/bot"));
+        subscriptionDao.add(randomLong, linkId);
+        subscriptionDao.add(randomLong1, linkId);
 
-		assertThat(chatDao.findLinkSubscribers(linkId)).hasSize(1);
-	}
+        assertThat(chatDao.findLinkSubscribers(linkId)).hasSize(2);
 
-	@Test
-	@Transactional
-	@Rollback
-	@SneakyThrows
-	public void updateLinkTest() {
+        subscriptionDao.remove(randomLong, linkId);
 
-		long addedLink = linkDao.add(new URI("https://github.com/kuzinalex/parser"));
-		Link link = new Link(addedLink,"https://github.com/kuzinalex/parser", OffsetDateTime.now().plusHours(1L), OffsetDateTime.now().plusHours(2L));
-		linkDao.update(link);
-		Link updatedLink = linkDao.find(new URI(link.getUrl()));
+        assertThat(chatDao.findLinkSubscribers(linkId)).hasSize(1);
+    }
 
-		assertThat(link).isNotEqualTo(updatedLink);
-	}
+    @Test
+    @Transactional
+    @Rollback
+    @SneakyThrows
+    public void updateLinkTest() {
 
-	@Test
-	@Transactional
-	@Rollback
-	@SneakyThrows
-	public void findOlderThanLinkTest() {
+        long addedLink = linkDao.add(new URI(TEST_URI_TWO));
+        Link link = new Link(addedLink, TEST_URI_TWO, OffsetDateTime.now().plusHours(1L), OffsetDateTime.now().plusHours(2L));
+        linkDao.update(link);
+        Link updatedLink = linkDao.find(new URI(link.getUrl()));
 
-		linkDao.add(new URI("https://github.com/kuzinalex/link-parser"));
-		assertThat(linkDao.findOld(OffsetDateTime.now().plusHours(2))).hasSizeGreaterThan(0);
-	}
+        assertThat(link).isNotEqualTo(updatedLink);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    @SneakyThrows
+    public void findOlderThanLinkTest() {
+
+        linkDao.add(new URI("https://github.com/kuzinalex/link-parser"));
+        assertThat(linkDao.findOld(OffsetDateTime.now().plusHours(2))).hasSizeGreaterThan(0);
+    }
 
 }

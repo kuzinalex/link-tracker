@@ -1,5 +1,11 @@
 package ru.tinkoff.edu.java.scrapper.scheduler;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.util.Date;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,13 +17,6 @@ import ru.tinkoff.edu.java.scrapper.configuration.ApplicationProperties;
 import ru.tinkoff.edu.java.scrapper.entity.Link;
 import ru.tinkoff.edu.java.scrapper.service.update.UpdateService;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.time.OffsetDateTime;
-import java.util.Date;
-import java.util.List;
-
 @Slf4j
 @Component
 @AllArgsConstructor
@@ -26,7 +25,7 @@ public class LinkUpdaterScheduler {
     private final UpdateService updater;
     private final LinkParser linkParser;
     private final ApplicationProperties properties;
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+    private  final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     @Scheduled(fixedDelayString = "#{${app.scheduler.interval}}")
     public void update() throws MalformedURLException {

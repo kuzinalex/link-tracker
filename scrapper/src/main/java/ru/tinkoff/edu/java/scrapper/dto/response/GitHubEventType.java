@@ -7,8 +7,8 @@ import lombok.Getter;
 @Getter
 public enum GitHubEventType {
 
-	PUSH_EVENT("PushEvent"),
-	PULL_REQUEST_EVENT("PullRequestEvent");
+    PUSH_EVENT("PushEvent"),
+    PULL_REQUEST_EVENT("PullRequestEvent");
 
-	private final String value;
+    private final String value;
 }

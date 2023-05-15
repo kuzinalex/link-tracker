@@ -20,42 +20,42 @@ import ru.tinkoff.edu.java.scrapper.service.jooq.JooqSubscriptionService;
 @AllArgsConstructor
 public class JooqAccessConfiguration {
 
-	private final DSLContext dslContext;
+    private final DSLContext dslContext;
 
-	@Bean
-	JooqLinkDao linkDao() {
+    @Bean
+    JooqLinkDao linkDao() {
 
-		return new JooqLinkDao(dslContext);
-	}
+        return new JooqLinkDao(dslContext);
+    }
 
-	@Bean
-	JooqChatDao chatDao() {
+    @Bean
+    JooqChatDao chatDao() {
 
-		return new JooqChatDao(dslContext);
-	}
+        return new JooqChatDao(dslContext);
+    }
 
-	@Bean
-	JooqSubscriptionDao subscriptionDao() {
+    @Bean
+    JooqSubscriptionDao subscriptionDao() {
 
-		return new JooqSubscriptionDao(dslContext);
-	}
+        return new JooqSubscriptionDao(dslContext);
+    }
 
-	@Bean
-	public ChatService chatService() {
+    @Bean
+    public ChatService chatService() {
 
-		return new JooqChatService(chatDao());
-	}
+        return new JooqChatService(chatDao());
+    }
 
-	@Bean
-	public SubscriptionService subscriptionService() {
+    @Bean
+    public SubscriptionService subscriptionService() {
 
-		return new JooqSubscriptionService(linkDao(), subscriptionDao());
-	}
+        return new JooqSubscriptionService(linkDao(), subscriptionDao());
+    }
 
-	@Bean
-	public LinkService linkService() {
+    @Bean
+    public LinkService linkService() {
 
-		return new JooqLinkService(linkDao());
-	}
+        return new JooqLinkService(linkDao());
+    }
 
 }

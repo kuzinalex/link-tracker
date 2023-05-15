@@ -1,6 +1,11 @@
 package ru.tinkoff.edu.java.bot.configuration;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
@@ -9,47 +14,49 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfiguration {
 
-	@Bean
-	public MessageConverter jsonMessageConverter() {
+    public static final String DLX = ".dlx";
 
-		return new Jackson2JsonMessageConverter();
-	}
+    @Bean
+    public MessageConverter jsonMessageConverter() {
 
-	@Bean
-	public Queue scrapperQueue(ApplicationConfig config) {
+        return new Jackson2JsonMessageConverter();
+    }
 
-		return QueueBuilder.durable(config.queueName())
-				.withArgument("x-dead-letter-exchange", config.queueName().concat(".dlx"))
-				.build();
-	}
+    @Bean
+    public Queue scrapperQueue(ApplicationConfig config) {
 
-	@Bean
-	public DirectExchange scrapperExchange(ApplicationConfig config) {
+        return QueueBuilder.durable(config.queueName())
+            .withArgument("x-dead-letter-exchange", config.queueName().concat(DLX))
+            .build();
+    }
 
-		return new DirectExchange(config.exchangeName());
-	}
+    @Bean
+    public DirectExchange scrapperExchange(ApplicationConfig config) {
 
-	@Bean
-	public Binding bindingScrapper(Queue scrapperQueue, DirectExchange scrapperExchange) {
+        return new DirectExchange(config.exchangeName());
+    }
 
-		return BindingBuilder.bind(scrapperQueue).to(scrapperExchange).withQueueName();
-	}
+    @Bean
+    public Binding bindingScrapper(Queue scrapperQueue, DirectExchange scrapperExchange) {
 
-	@Bean
-	public Queue deadLetterQueue(ApplicationConfig config) {
+        return BindingBuilder.bind(scrapperQueue).to(scrapperExchange).withQueueName();
+    }
 
-		return QueueBuilder.durable(config.queueName().concat(".dlq")).build();
-	}
+    @Bean
+    public Queue deadLetterQueue(ApplicationConfig config) {
 
-	@Bean
-	public FanoutExchange deadLetterExchange(ApplicationConfig config) {
+        return QueueBuilder.durable(config.queueName().concat(".dlq")).build();
+    }
 
-		return new FanoutExchange(config.queueName().concat(".dlx"));
-	}
+    @Bean
+    public FanoutExchange deadLetterExchange(ApplicationConfig config) {
 
-	@Bean
-	public Binding deadLetterBinding(Queue deadLetterQueue, FanoutExchange fanoutExchange) {
+        return new FanoutExchange(config.queueName().concat(DLX));
+    }
 
-		return BindingBuilder.bind(deadLetterQueue).to(fanoutExchange);
-	}
+    @Bean
+    public Binding deadLetterBinding(Queue deadLetterQueue, FanoutExchange fanoutExchange) {
+
+        return BindingBuilder.bind(deadLetterQueue).to(fanoutExchange);
+    }
 }

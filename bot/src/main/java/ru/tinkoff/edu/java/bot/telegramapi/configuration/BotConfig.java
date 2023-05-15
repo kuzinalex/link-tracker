@@ -9,11 +9,11 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 public class BotConfig {
 
-	private BotProperties properties;
+    private BotProperties properties;
 
-	@Bean
-	TelegramBot telegramBot() {
+    @Bean
+    TelegramBot telegramBot() {
 
-		return new TelegramBot(properties.token());
-	}
+        return new TelegramBot(properties.token());
+    }
 }

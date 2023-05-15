@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 import ru.tinkoff.edu.java.scrapper.configuration.ApplicationProperties;
 import ru.tinkoff.edu.java.scrapper.webclient.BotClient;
-import ru.tinkoff.edu.java.scrapper.webclient.HttpBotClient;
 import ru.tinkoff.edu.java.scrapper.webclient.GitHubClient;
+import ru.tinkoff.edu.java.scrapper.webclient.HttpBotClient;
 import ru.tinkoff.edu.java.scrapper.webclient.StackOverflowClient;
 
 @Configuration
@@ -35,8 +35,8 @@ public class ClientConfiguration {
     public WebClient githubWebClient() {
 
         return WebClient.builder()
-                .baseUrl(applicationProperties.githubBaseUrl())
-                .build();
+            .baseUrl(applicationProperties.githubBaseUrl())
+            .build();
 
     }
 
@@ -44,8 +44,8 @@ public class ClientConfiguration {
     public WebClient stackoverflowWebClient() {
 
         return WebClient.builder()
-                .baseUrl(applicationProperties.stackoverflowBaseUrl())
-                .build();
+            .baseUrl(applicationProperties.stackoverflowBaseUrl())
+            .build();
 
     }
 
@@ -53,8 +53,8 @@ public class ClientConfiguration {
     public WebClient botWebClient() {
 
         return WebClient.builder()
-                .baseUrl(applicationProperties.botUrl())
-                .build();
+            .baseUrl(applicationProperties.botUrl())
+            .build();
 
     }
 

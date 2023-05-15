@@ -3,12 +3,9 @@
  */
 package ru.tinkoff.edu.java.scrapper.entity.jooq.tables;
 
-
 import java.time.LocalDateTime;
 import java.util.function.Function;
-
 import javax.annotation.processing.Generated;
-
 import org.jetbrains.annotations.NotNull;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
@@ -25,7 +22,6 @@ import org.jooq.TableOptions;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
 import ru.tinkoff.edu.java.scrapper.entity.jooq.Public;
 import ru.tinkoff.edu.java.scrapper.entity.jooq.tables.records.DatabasechangelogRecord;
 

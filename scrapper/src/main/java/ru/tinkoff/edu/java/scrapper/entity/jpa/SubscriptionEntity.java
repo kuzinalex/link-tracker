@@ -9,8 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 @Entity
 @Table(name = "subscription")
 @Data
@@ -19,15 +17,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class SubscriptionEntity {
 
-	@Id
-	@Column(name = "chat_id")
-	private Long chatId;
-	@Id
-	@Column(name = "link_id")
-	private Long linkId;
+    @Id
+    @Column(name = "chat_id")
+    private Long chatId;
+    @Id
+    @Column(name = "link_id")
+    private Long linkId;
 }
 
-class SubscriptionId implements Serializable {
-	private Long chatId;
-	private Long linkId;
-}

@@ -9,12 +9,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenAPIConfig {
 
-	@Bean
-	public OpenAPI customOpenApi() {
+    @Bean
+    public OpenAPI customOpenApi() {
 
-		return new OpenAPI().info(new Info().title("Bot API")
-				.contact(new Contact().name("Alexey Kuzin")
-						.url("https://github.com/kuzinalex")));
-	}
+        return new OpenAPI().info(new Info().title("Bot API")
+            .contact(new Contact().name("Alexey Kuzin")
+                .url("https://github.com/kuzinalex")));
+    }
 
 }

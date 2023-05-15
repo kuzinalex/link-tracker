@@ -3,12 +3,9 @@
  */
 package ru.tinkoff.edu.java.scrapper.entity.jooq;
 
-
 import java.util.Arrays;
 import java.util.List;
-
 import javax.annotation.processing.Generated;
-
 import org.jetbrains.annotations.NotNull;
 import org.jooq.Constants;
 import org.jooq.Schema;

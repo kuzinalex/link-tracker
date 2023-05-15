@@ -17,19 +17,18 @@ public class HttpBotClient implements BotClient {
     @Override
     public Mono<ResponseEntity> pullLinks(LinkUpdate linkUpdate) {
         return client.post()
-                .uri(uriBuilder -> uriBuilder
-                        .path(UPDATES)
-                        .build())
-                .bodyValue(linkUpdate)
-                .exchangeToMono(clientResponse -> {
-                    if (clientResponse.statusCode().is4xxClientError() || clientResponse.statusCode().is5xxServerError()) {
-                        return clientResponse.bodyToMono(ApiErrorResponse.class)
+            .uri(uriBuilder -> uriBuilder
+                .path(UPDATES)
+                .build())
+            .bodyValue(linkUpdate)
+            .exchangeToMono(clientResponse -> {
+                if (clientResponse.statusCode().is4xxClientError() || clientResponse.statusCode().is5xxServerError()) {
+                    return clientResponse.bodyToMono(ApiErrorResponse.class)
 //                                пока что ловлю Exception, потому что в контроллерах заглушки
-                                .flatMap(apiErrorResponse -> Mono.error(new Exception(apiErrorResponse.description())));
-                    }
-                    return clientResponse.bodyToMono(ResponseEntity.class);
-                });
+                        .flatMap(apiErrorResponse -> Mono.error(new Exception(apiErrorResponse.description())));
+                }
+                return clientResponse.bodyToMono(ResponseEntity.class);
+            });
     }
-
 
 }

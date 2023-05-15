@@ -8,17 +8,17 @@ import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
 
 public interface GitHubClient {
 
-	static GitHubClient create(WebClient client) {
+    static GitHubClient create(WebClient client) {
 
-		return new HttpGitHubClient(client);
-	}
+        return new HttpGitHubClient(client);
+    }
 
-	static GitHubClient create(WebClient.Builder builder, String url) {
+    static GitHubClient create(WebClient.Builder builder, String url) {
 
-		return new HttpGitHubClient(builder.baseUrl(url).build());
-	}
+        return new HttpGitHubClient(builder.baseUrl(url).build());
+    }
 
-	Mono<GitHubResponse> fetchRepository(String user, String repository);
+    Mono<GitHubResponse> fetchRepository(String user, String repository);
 
-	Flux<GitHubEvent> fetchRepositoryEvents(String user, String repository);
+    Flux<GitHubEvent> fetchRepositoryEvents(String user, String repository);
 }

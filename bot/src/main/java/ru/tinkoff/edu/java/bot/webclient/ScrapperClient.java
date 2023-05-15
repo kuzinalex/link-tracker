@@ -9,13 +9,13 @@ import ru.tinkoff.edu.java.common.dto.response.ListLinksResponse;
 
 public interface ScrapperClient {
 
-	Mono<ResponseEntity> registerChat(Long id) ;
+    Mono<ResponseEntity> registerChat(Long id);
 
-	Mono<ResponseEntity> deleteChat(Long id);
+    Mono<ResponseEntity> deleteChat(Long id);
 
-	Mono<ListLinksResponse> getLinks(Long id);
+    Mono<ListLinksResponse> getLinks(Long id);
 
-	Mono<LinkResponse> addLink(Long id, AddLinkRequest request);
+    Mono<LinkResponse> addLink(Long id, AddLinkRequest request);
 
-	Mono<LinkResponse> deleteLink(Long id, RemoveLinkRequest request);
+    Mono<LinkResponse> deleteLink(Long id, RemoveLinkRequest request);
 }

@@ -23,16 +23,17 @@ import ru.tinkoff.edu.java.common.dto.response.ApiErrorResponse;
 @AllArgsConstructor
 public class UpdateController {
 
-	private final UpdateService updateService;
-	@Operation(summary = "Отправить обновление")
-	@ApiResponses({
-			@ApiResponse(responseCode = "200", description = "Обновление обработано", content = {@Content(schema = @Schema)}),
-			@ApiResponse(responseCode = "400", description = "Некорректные параметры запроса", content = {@Content(schema = @Schema(implementation = ApiErrorResponse.class))})})
-	@PostMapping(value = "/updates",
-			produces = MediaType.APPLICATION_JSON_VALUE,
-			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> updates(@Valid @RequestBody(required = true) LinkUpdate request) {
-		updateService.sendNotifications(request);
-		return new ResponseEntity<>(HttpStatus.OK); // заглушка
-	}
+    private final UpdateService updateService;
+
+    @Operation(summary = "Отправить обновление")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Обновление обработано", content = {@Content(schema = @Schema)}),
+        @ApiResponse(responseCode = "400", description = "Некорректные параметры запроса", content = {@Content(schema = @Schema(implementation = ApiErrorResponse.class))})})
+    @PostMapping(value = "/updates",
+                 produces = MediaType.APPLICATION_JSON_VALUE,
+                 consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updates(@Valid @RequestBody(required = true) LinkUpdate request) {
+        updateService.sendNotifications(request);
+        return new ResponseEntity<>(HttpStatus.OK); // заглушка
+    }
 }

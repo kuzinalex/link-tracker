@@ -12,10 +12,10 @@ import ru.tinkoff.edu.java.common.dto.LinkUpdate;
 @AllArgsConstructor
 public class ScrapperQueueListener {
 
-	private final UpdateService updateService;
+    private final UpdateService updateService;
 
-	@RabbitHandler
-	public void listen(LinkUpdate update) {
-		updateService.sendNotifications(update);
-	}
+    @RabbitHandler
+    public void listen(LinkUpdate update) {
+        updateService.sendNotifications(update);
+    }
 }

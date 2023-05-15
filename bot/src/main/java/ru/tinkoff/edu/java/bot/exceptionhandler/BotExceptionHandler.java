@@ -12,17 +12,17 @@ import ru.tinkoff.edu.java.common.dto.response.ApiErrorResponse;
 @RestControllerAdvice
 public class BotExceptionHandler {
 
-	@ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
-	public ResponseEntity<ApiErrorResponse> handleBadRequestExceptions(Exception e) {
+    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
+    public ResponseEntity<ApiErrorResponse> handleBadRequestExceptions(Exception e) {
 
-		ApiErrorResponse apiErrorResponse = new ApiErrorResponse( // ApiErrorResponse заглушка
-				"Некорректные параметры запроса",
-				HttpStatus.BAD_REQUEST.toString(),
-				e.getClass().getName(),
-				e.getMessage(),
-				ThrowableToStringArray.convert(e)
-		);
-		return new ResponseEntity<>(apiErrorResponse, HttpStatus.BAD_REQUEST);
-	}
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(
+            "Некорректные параметры запроса",
+            HttpStatus.BAD_REQUEST.toString(),
+            e.getClass().getName(),
+            e.getMessage(),
+            ThrowableToStringArray.convert(e)
+        );
+        return new ResponseEntity<>(apiErrorResponse, HttpStatus.BAD_REQUEST);
+    }
 
 }

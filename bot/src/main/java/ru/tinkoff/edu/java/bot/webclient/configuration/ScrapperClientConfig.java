@@ -11,11 +11,11 @@ import ru.tinkoff.edu.java.bot.webclient.ScrapperClient;
 @AllArgsConstructor
 public class ScrapperClientConfig {
 
-	ScrapperProperties properties;
+    ScrapperProperties properties;
 
-	@Bean
-	public ScrapperClient scrapperClient() {
+    @Bean
+    public ScrapperClient scrapperClient() {
 
-		return new HttpScrapperClient(WebClient.builder().baseUrl(properties.baseUrl()).build());
-	}
+        return new HttpScrapperClient(WebClient.builder().baseUrl(properties.baseUrl()).build());
+    }
 }

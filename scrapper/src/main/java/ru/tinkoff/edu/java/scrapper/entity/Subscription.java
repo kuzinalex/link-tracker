@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Subscription {
-	private Long chatId;
-	private Long linkId;
+    private Long chatId;
+    private Long linkId;
 }

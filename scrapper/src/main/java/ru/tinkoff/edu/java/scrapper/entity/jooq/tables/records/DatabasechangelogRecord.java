@@ -3,21 +3,16 @@
  */
 package ru.tinkoff.edu.java.scrapper.entity.jooq.tables.records;
 
-
 import jakarta.validation.constraints.Size;
-
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
-
 import javax.annotation.processing.Generated;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jooq.Field;
 import org.jooq.Record14;
 import org.jooq.Row14;
 import org.jooq.impl.TableRecordImpl;
-
 import ru.tinkoff.edu.java.scrapper.entity.jooq.tables.Databasechangelog;
 
 

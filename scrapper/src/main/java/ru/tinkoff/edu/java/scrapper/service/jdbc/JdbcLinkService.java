@@ -1,28 +1,27 @@
 package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
+import java.time.OffsetDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.dao.LinkDao;
 import ru.tinkoff.edu.java.scrapper.entity.Link;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
-import java.time.OffsetDateTime;
-import java.util.List;
-
 @AllArgsConstructor
 public class JdbcLinkService implements LinkService {
 
-	private final LinkDao linkDao;
+    private final LinkDao linkDao;
 
-	@Override
-	public List<Link> findOld(OffsetDateTime checkTime) {
+    @Override
+    public List<Link> findOld(OffsetDateTime checkTime) {
 
-		return linkDao.findOld(checkTime);
-	}
+        return linkDao.findOld(checkTime);
+    }
 
-	@Override
-	public int update(Link link) {
+    @Override
+    public int update(Link link) {
 
-		linkDao.update(link);
-		return 0;
-	}
+        linkDao.update(link);
+        return 0;
+    }
 }
