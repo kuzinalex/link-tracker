@@ -12,6 +12,7 @@ import jakarta.annotation.PostConstruct;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.tinkoff.edu.java.bot.service.MetricService;
 import ru.tinkoff.edu.java.bot.telegramapi.command.Command;
 import ru.tinkoff.edu.java.bot.telegramapi.processor.MessageProcessor;
 
@@ -21,6 +22,7 @@ public class TrackerBot implements Bot {
 
     private TelegramBot bot;
     private MessageProcessor processor;
+    private MetricService metricService;
 
     @PostConstruct
     private void postConstruct() {
@@ -42,6 +44,7 @@ public class TrackerBot implements Bot {
         for (Update update : updates) {
             SendMessage message = processor.process(update);
             execute(message);
+            metricService.incrementHandledMessageCount();
         }
 
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
