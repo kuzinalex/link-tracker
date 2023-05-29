@@ -16,9 +16,25 @@ springdoc:
 
 
 spring:
+  application:
+    name: bot
   rabbitmq:
     listener:
       simple:
         retry:
           enabled: true
           max-attempts: 1
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  server:
+    port: 8083
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health, info, prometheus
+      path-mapping:
+        prometheus: metrics

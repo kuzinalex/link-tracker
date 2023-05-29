@@ -16,8 +16,24 @@ springdoc:
     path: "/swagger-ui"
 
 spring:
+  application:
+    name: scrapper
   datasource:
     url: jdbc:postgresql://localhost:5433/scrapper
     username:
     password:
     driverClassName: org.postgresql.Driver
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  server:
+    port: 8082
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health, info, prometheus
+      path-mapping:
+        prometheus: metrics
